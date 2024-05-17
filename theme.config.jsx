@@ -1,6 +1,24 @@
 // theme.config.js
 import { useRouter } from 'next/router';
 import { useConfig } from 'nextra-theme-docs';
+import Giscus from '@giscus/react';
+
+const Comments = ({ term }) => (
+    <Giscus
+        id='comments'
+        repo='yoyobar/vercelblog'
+        repoId='R_kgDOL8uRmA'
+        category='General'
+        categoryId='DIC_kwDOL8uRmM4Cfa6n'
+        mapping='pathname'
+        term={term}
+        reactionsEnabled='1'
+        emitMetadata='0'
+        inputPosition='top'
+        theme='light'
+        lang='en'
+    />
+);
 
 export default {
     logo: (
@@ -70,5 +88,14 @@ export default {
                 </a>
             </span>
         ),
+    },
+    main: ({ children }) => {
+        const { asPath } = useRouter();
+        return (
+            <>
+                {children}
+                <Comments term={asPath} />
+            </>
+        );
     },
 };
