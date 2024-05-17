@@ -1,10 +1,28 @@
 // theme.config.js
 import { useRouter } from 'next/router';
-import { useConfig } from 'nextra-theme-docs';
+import { useConfig, useTheme } from 'nextra-theme-docs';
 import Giscus from '@giscus/react';
 import { useEffect, useState } from 'react';
 
 const Comments = ({ term }) => {
+    const { systemTheme, theme } = useTheme();
+    const [mode, setMode] = useState(theme);
+
+    useEffect(() => {
+        switch (theme) {
+            case 'light':
+                setMode('light_high_contrast');
+                break;
+            case 'dark':
+                setMode('dark_high_contrast');
+                break;
+            case 'system':
+                if (systemTheme === 'light') setMode('light_high_contrast');
+                if (systemTheme === 'dark') setMode('dark_high_contrast');
+                break;
+        }
+    }, [theme]);
+
     return (
         <Giscus
             id='comments'
@@ -17,8 +35,8 @@ const Comments = ({ term }) => {
             reactionsEnabled='1'
             emitMetadata='0'
             inputPosition='top'
-            theme='transparent_dark'
-            lang='en'
+            theme={mode}
+            lang='ko'
         />
     );
 };
@@ -88,10 +106,10 @@ export default {
         const { asPath, defaultLocale, locale } = useRouter();
         const { frontMatter } = useConfig();
         const url = 'https://wiki-drab-sigma.vercel.app' + (defaultLocale === locale ? asPath : `/${locale}${asPath}`);
-        const title = asPath.split('/').pop(1);
+        const title = asPath.split('/');
         return (
             <>
-                <title>{`frontMatter.title || 'Wiki`}</title>
+                <title>{`Trouble Wiki ${title && '| ' + title[1]}`}</title>
                 <meta property='og:url' content={url} />
                 <meta property='og:title' content={frontMatter.title || 'Wiki'} />
                 <meta property='og:description' content={frontMatter.description || 'Wiki기반 개인 블로그 입니다.'} />
@@ -130,16 +148,14 @@ export default {
                                 display: 'flex',
                                 flexDirection: 'column',
                                 justifyContent: 'center',
-                                alignItems: 'center',
+                                alignItems: 'start',
                             }}
                         >
                             {!commentVisible && (
                                 <button
                                     style={{
                                         padding: '0.5rem',
-                                        backgroundColor: 'cornflowerblue',
                                         borderRadius: '10px',
-                                        color: 'white',
                                         transition: 'filter 0.2s',
                                     }}
                                     onClick={() => setCommentVisible(true)}
@@ -150,7 +166,7 @@ export default {
                                         e.target.style.filter = 'brightness(1.0)';
                                     }}
                                 >
-                                    Load Comments
+                                    {'댓글 열기 >'}
                                 </button>
                             )}
                             {commentVisible && (
@@ -158,9 +174,7 @@ export default {
                                     <button
                                         style={{
                                             padding: '0.5rem',
-                                            backgroundColor: 'tomato',
                                             borderRadius: '10px',
-                                            color: 'white',
                                             transition: 'filter 0.2s',
                                         }}
                                         onClick={() => setCommentVisible(false)}
@@ -171,7 +185,7 @@ export default {
                                             e.target.style.filter = 'brightness(1.0)';
                                         }}
                                     >
-                                        Close Comments
+                                        {'댓글 닫기 <'}
                                     </button>
                                     <Comments term={asPath} />
                                 </>
