@@ -1,3 +1,4 @@
+// theme.config.js
 import { useRouter } from 'next/router';
 import { useConfig } from 'nextra-theme-docs';
 
@@ -54,14 +55,12 @@ export default {
             </>
         );
     },
-
     search: {
         placeholder: '찾는 내용을 검색..',
     },
     sidebar: {
         defaultMenuCollapseLevel: 0,
     },
-
     footer: {
         text: (
             <span>
