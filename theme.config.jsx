@@ -2,25 +2,48 @@
 import { useRouter } from 'next/router';
 import { useConfig } from 'nextra-theme-docs';
 import Giscus from '@giscus/react';
+import { useEffect, useState } from 'react';
 
-const Comments = ({ term }) => (
-    <Giscus
-        id='comments'
-        repo='yoyobar/vercelblog'
-        repoId='R_kgDOL8uRmA'
-        category='General'
-        categoryId='DIC_kwDOL8uRmM4Cfa6n'
-        mapping='pathname'
-        term={term}
-        reactionsEnabled='1'
-        emitMetadata='0'
-        inputPosition='top'
-        theme='light'
-        lang='en'
-    />
-);
+const Comments = ({ term }) => {
+    return (
+        <Giscus
+            id='comments'
+            repo='yoyobar/vercelblog'
+            repoId='R_kgDOL8uRmA'
+            category='General'
+            categoryId='DIC_kwDOL8uRmM4Cfa6n'
+            mapping='pathname'
+            term={term}
+            reactionsEnabled='1'
+            emitMetadata='0'
+            inputPosition='top'
+            theme='transparent_dark'
+            lang='en'
+        />
+    );
+};
 
 export default {
+    toc: {
+        title: '현재 페이지',
+    },
+    editLink: {
+        component: null,
+    },
+    feedback: {
+        content: null,
+    },
+
+    themeSwitch: {
+        useOptions() {
+            return {
+                light: '라이트 테마',
+                dark: '다크 테마',
+                system: '시스템 테마',
+            };
+        },
+    },
+
     logo: (
         <>
             <span
@@ -92,10 +115,68 @@ export default {
     main: ({ children }) => {
         const { asPath } = useRouter();
         const { frontMatter } = useConfig();
+        const [commentVisible, setCommentVisible] = useState(false);
         return (
             <>
                 {children}
-                {frontMatter?.comments !== false && <Comments term={asPath} />}
+
+                {frontMatter?.comments !== false && (
+                    <>
+                        <div
+                            style={{
+                                width: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                        >
+                            {!commentVisible && (
+                                <button
+                                    style={{
+                                        padding: '0.5rem',
+                                        backgroundColor: 'cornflowerblue',
+                                        borderRadius: '10px',
+                                        color: 'white',
+                                        transition: 'filter 0.2s',
+                                    }}
+                                    onClick={() => setCommentVisible(true)}
+                                    onMouseEnter={(e) => {
+                                        e.target.style.filter = 'brightness(0.8)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.target.style.filter = 'brightness(1.0)';
+                                    }}
+                                >
+                                    Load Comments
+                                </button>
+                            )}
+                            {commentVisible && (
+                                <>
+                                    <button
+                                        style={{
+                                            padding: '0.5rem',
+                                            backgroundColor: 'tomato',
+                                            borderRadius: '10px',
+                                            color: 'white',
+                                            transition: 'filter 0.2s',
+                                        }}
+                                        onClick={() => setCommentVisible(false)}
+                                        onMouseEnter={(e) => {
+                                            e.target.style.filter = 'brightness(0.8)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.target.style.filter = 'brightness(1.0)';
+                                        }}
+                                    >
+                                        Close Comments
+                                    </button>
+                                    <Comments term={asPath} />
+                                </>
+                            )}
+                        </div>
+                    </>
+                )}
             </>
         );
     },
