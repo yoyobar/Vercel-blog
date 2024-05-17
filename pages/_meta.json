@@ -1,0 +1,22 @@
+{
+    "index": {
+      "title": "Home",
+      "type": "page"
+    },
+    "blog": {
+      "title": "Blog",
+      "type": "page",
+
+      "CSS": {
+        "title": "씨에스에스"
+      }
+    },
+    "project": {
+      "title": "Projects",
+      "type": "page"
+    },
+    "about": {
+      "title": "About",
+      "type": "page"
+    }
+  }
