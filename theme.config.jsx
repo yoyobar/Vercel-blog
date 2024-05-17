@@ -87,7 +87,7 @@ export default {
     head: () => {
         const { asPath, defaultLocale, locale } = useRouter();
         const { frontMatter } = useConfig();
-        const url = 'https://my-app.com' + (defaultLocale === locale ? asPath : `/${locale}${asPath}`);
+        const url = 'https://wiki-drab-sigma.vercel.app' + (defaultLocale === locale ? asPath : `/${locale}${asPath}`);
         const title = asPath.split('/').pop();
         return (
             <>
