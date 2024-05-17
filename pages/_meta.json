@@ -5,11 +5,7 @@
     },
     "blog": {
       "title": "Blog",
-      "type": "page",
-
-      "CSS": {
-        "title": "씨에스에스"
-      }
+      "type": "page"
     },
     "project": {
       "title": "Projects",
