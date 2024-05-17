@@ -107,12 +107,16 @@ export default {
         const { frontMatter } = useConfig();
         const url = 'https://wiki-drab-sigma.vercel.app' + (defaultLocale === locale ? asPath : `/${locale}${asPath}`);
         const title = asPath.split('/');
+
         return (
             <>
                 <title>{`Trouble Wiki ${title && '| ' + title[1]}`}</title>
                 <meta property='og:url' content={url} />
-                <meta property='og:title' content={frontMatter.title || 'Wiki'} />
-                <meta property='og:description' content={frontMatter.description || 'Wiki기반 개인 블로그 입니다.'} />
+                <meta property='og:title' content={frontMatter.title === undefined ? 'Wiki' : frontMatter.title} />
+                <meta
+                    property='og:description'
+                    content={frontMatter.description === undefined ? 'Wiki기반 개인 블로그 입니다.' : frontMatter.description}
+                />
             </>
         );
     },
