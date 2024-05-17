@@ -88,10 +88,10 @@ export default {
         const { asPath, defaultLocale, locale } = useRouter();
         const { frontMatter } = useConfig();
         const url = 'https://wiki-drab-sigma.vercel.app' + (defaultLocale === locale ? asPath : `/${locale}${asPath}`);
-        const title = asPath.split('/').pop();
+        const title = asPath.split('/').pop(1);
         return (
             <>
-                <title>{`Trouble Wiki / ${title}`}</title>
+                <title>{`frontMatter.title || 'Wiki`}</title>
                 <meta property='og:url' content={url} />
                 <meta property='og:title' content={frontMatter.title || 'Wiki'} />
                 <meta property='og:description' content={frontMatter.description || 'Wiki기반 개인 블로그 입니다.'} />
