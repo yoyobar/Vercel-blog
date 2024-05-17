@@ -90,9 +90,11 @@ export default {
         const url = 'https://my-app.com' + (defaultLocale === locale ? asPath : `/${locale}${asPath}`);
         return (
             <>
+                <title>{frontMatter.title || 'Wiki'}</title>
                 <meta property='og:url' content={url} />
                 <meta property='og:title' content={frontMatter.title || 'Wiki'} />
                 <meta property='og:description' content={frontMatter.description || 'Wiki기반 개인 블로그 입니다.'} />
+                <html lang='ko' />
             </>
         );
     },
