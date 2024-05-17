@@ -89,12 +89,12 @@ export default {
             </span>
         ),
     },
-    main: ({ children }) => {
+    main: ({ children, frontMatter }) => {
         const { asPath } = useRouter();
         return (
             <>
                 {children}
-                <Comments term={asPath} />
+                {frontMatter.comments !== false && <Comments term={asPath} />}
             </>
         );
     },
