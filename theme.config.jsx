@@ -62,14 +62,17 @@ const Comments = ({ term }) => {
 };
 
 export default {
+    docsRepositoryBase: 'https://github.com/yoyobar/VercelBlog',
+
     toc: {
-        title: <div className='font-mono'>TABLE OF CONTENT</div>,
-    },
-    editLink: {
-        component: null,
+        title: 'TABLE OF CONTENT',
+        backToTop: false,
     },
     feedback: {
         content: null,
+    },
+    editLink: {
+        component: null,
     },
 
     themeSwitch: {
@@ -144,7 +147,7 @@ export default {
         placeholder: '찾는 내용을 검색..',
     },
     sidebar: {
-        defaultMenuCollapseLevel: 1,
+        defaultMenuCollapseLevel: 2,
     },
     footer: {
         text: (
