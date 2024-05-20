@@ -163,11 +163,14 @@ export default {
         ),
     },
     main: ({ children }) => {
+        const { frontMatter } = useConfig();
         const { asPath } = useRouter();
+        const isComment = frontMatter?.comments === false ? false : true;
+
         return (
             <div style={{ fontFamily: "'Noto Sans KR'" }}>
                 {children}
-                <Comments term={asPath} />
+                {isComment && <Comments term={asPath} />}
             </div>
         );
     },
