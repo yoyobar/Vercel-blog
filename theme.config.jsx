@@ -63,7 +63,7 @@ const Comments = ({ term }) => {
 
 export default {
     toc: {
-        title: '현재 페이지',
+        title: <div className='font-mono'>TABLE OF CONTENT</div>,
     },
     editLink: {
         component: null,
@@ -131,12 +131,6 @@ export default {
         return (
             <>
                 <title>{`Trouble Wiki ${title && '| ' + title[1]}`}</title>
-                <link rel='preconnect' href='https://fonts.googleapis.com' />
-                <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
-                <link
-                    href='https://fonts.googleapis.com/css2?family=Nanum+Gothic&family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@100..900&display=swap'
-                    rel='stylesheet'
-                ></link>
                 <meta property='og:url' content={url} />
                 <meta property='og:title' content={frontMatter.title === undefined ? 'Wiki' : frontMatter.title} />
                 <meta

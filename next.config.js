@@ -3,8 +3,16 @@ const withNextra = require('nextra')({
     themeConfig: './theme.config.jsx',
     standalone: true,
 });
+const nextConfig = {
+    reactStrictMode: true,
+    webpack: (config) => {
+        config.module.rules.push({
+            test: /\.svg$/,
+            use: ['@svgr/webpack'],
+        });
 
-module.exports = withNextra();
+        return config;
+    },
+};
 
-// If you have other Next.js configurations, you can pass them as the parameter:
-// module.exports = withNextra({ /* other next.js config */ })
+module.exports = withNextra(nextConfig);

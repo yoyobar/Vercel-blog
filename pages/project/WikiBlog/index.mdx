@@ -1,0 +1,26 @@
+---
+title: 블로그 문법 정리
+comments: false
+---
+import { Cards, Card} from 'nextra/components'
+import MarkIcon from '/public/icon/note-16.svg'
+import SyntaxIcon from '/public/icon/pencil-16.svg'
+import LinkIcon from '/public/icon/git-merge-16.svg'
+import MermaidIcon from '/public/icon/filter-16.svg'
+import LaTeXIcon from '/public/icon/number-16.svg'
+import CalloutIcon from '/public/icon/alert-16.svg'
+import TabsIcon from '/public/icon/list-unordered-16.svg'
+import StepsIcon from '/public/icon/list-ordered-16.svg'
+import FiletreeIcon from '/public/icon/file-directory-16.svg'
+
+<Cards>
+  <Card  icon={<MarkIcon/>} title="마크다운" href="/project/WikiBlog/markdown" />
+  <Card  icon={<SyntaxIcon/>} title="문법 하이라이팅" href="/project/WikiBlog/syntax" />
+  <Card  icon={<LinkIcon/>} title="링크 연결" href="/project/WikiBlog/link" />
+  <Card  icon={<MermaidIcon/>} title="Mermaid" href="/project/WikiBlog/mermaid" />
+  <Card  icon={<LaTeXIcon/>} title="LaTeX" href="/project/WikiBlog/latex"/>
+  <Card  icon={<CalloutIcon/>} title="Callout" href="/project/WikiBlog/callout" />
+  <Card  icon={<TabsIcon/>} title="Tabs" href="/project/WikiBlog/tabs" />
+  <Card  icon={<StepsIcon/>} title="Steps" href="/project/WikiBlog/steps" />
+  <Card  icon={<FiletreeIcon/>} title="FileTree" href="/project/WikiBlog/filetree" />
+</Cards>

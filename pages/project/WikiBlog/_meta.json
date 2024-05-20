@@ -1,0 +1,29 @@
+{
+    "markdown": {
+        "display": "hidden"
+      },
+    "syntax": {
+        "display": "hidden"
+      },
+    "link": {
+        "display": "hidden"
+      },
+    "mermaid": {
+        "display": "hidden"
+      },
+    "latex": {
+        "display": "hidden"
+      },
+    "callout": {
+        "display": "hidden"
+      },
+    "tabs": {
+        "display": "hidden"
+      },
+    "steps": {
+        "display": "hidden"
+      },
+    "filetree": {
+        "display": "hidden"
+      }
+}
