@@ -1,4 +1,5 @@
 // theme.config.js
+
 import { useRouter } from 'next/router';
 import { useConfig, useTheme } from 'nextra-theme-docs';
 import Giscus from '@giscus/react';
@@ -6,7 +7,9 @@ import { useEffect, useState } from 'react';
 
 const Comments = ({ term }) => {
     const { systemTheme, theme } = useTheme();
+    const { asPath } = useRouter();
     const [mode, setMode] = useState(theme);
+    const [showComment, setShowComment] = useState(false);
 
     useEffect(() => {
         switch (theme) {
@@ -23,21 +26,38 @@ const Comments = ({ term }) => {
         }
     }, [theme]);
 
+    useEffect(() => {
+        setShowComment(false);
+    }, [asPath]);
+
+    const buttonHandler = () => {
+        setShowComment(!showComment);
+    };
+
     return (
-        <Giscus
-            id='comments'
-            repo='yoyobar/vercelblog'
-            repoId='R_kgDOL8uRmA'
-            category='General'
-            categoryId='DIC_kwDOL8uRmM4Cfa6n'
-            mapping='pathname'
-            term={term}
-            reactionsEnabled='1'
-            emitMetadata='0'
-            inputPosition='top'
-            theme={mode}
-            lang='ko'
-        />
+        <>
+            <button onClick={buttonHandler} className='bg-slate-400 w-full hover:bg-slate-500 transition text-white p-1 rounded-md'>
+                {showComment ? 'Close Comments' : 'Open Comments'}
+            </button>
+            {showComment && (
+                <div className='mt-4'>
+                    <Giscus
+                        id='comments'
+                        repo='yoyobar/vercelblog'
+                        repoId='R_kgDOL8uRmA'
+                        category='General'
+                        categoryId='DIC_kwDOL8uRmM4Cfa6n'
+                        mapping='pathname'
+                        term={term}
+                        reactionsEnabled='1'
+                        emitMetadata='0'
+                        inputPosition='top'
+                        theme={mode}
+                        lang='ko'
+                    />
+                </div>
+            )}
+        </>
     );
 };
 
@@ -111,6 +131,12 @@ export default {
         return (
             <>
                 <title>{`Trouble Wiki ${title && '| ' + title[1]}`}</title>
+                <link rel='preconnect' href='https://fonts.googleapis.com' />
+                <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
+                <link
+                    href='https://fonts.googleapis.com/css2?family=Nanum+Gothic&family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@100..900&display=swap'
+                    rel='stylesheet'
+                ></link>
                 <meta property='og:url' content={url} />
                 <meta property='og:title' content={frontMatter.title === undefined ? 'Wiki' : frontMatter.title} />
                 <meta
@@ -138,66 +164,11 @@ export default {
     },
     main: ({ children }) => {
         const { asPath } = useRouter();
-        const { frontMatter } = useConfig();
-        const [commentVisible, setCommentVisible] = useState(false);
         return (
-            <>
+            <div style={{ fontFamily: "'Noto Sans KR'" }}>
                 {children}
-
-                {frontMatter?.comments !== false && (
-                    <>
-                        <div
-                            style={{
-                                width: '100%',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                alignItems: 'start',
-                            }}
-                        >
-                            {!commentVisible && (
-                                <button
-                                    style={{
-                                        padding: '0.5rem',
-                                        borderRadius: '10px',
-                                        transition: 'filter 0.2s',
-                                    }}
-                                    onClick={() => setCommentVisible(true)}
-                                    onMouseEnter={(e) => {
-                                        e.target.style.filter = 'brightness(0.8)';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.target.style.filter = 'brightness(1.0)';
-                                    }}
-                                >
-                                    {'댓글 열기 >'}
-                                </button>
-                            )}
-                            {commentVisible && (
-                                <>
-                                    <button
-                                        style={{
-                                            padding: '0.5rem',
-                                            borderRadius: '10px',
-                                            transition: 'filter 0.2s',
-                                        }}
-                                        onClick={() => setCommentVisible(false)}
-                                        onMouseEnter={(e) => {
-                                            e.target.style.filter = 'brightness(0.8)';
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            e.target.style.filter = 'brightness(1.0)';
-                                        }}
-                                    >
-                                        {'댓글 닫기 <'}
-                                    </button>
-                                    <Comments term={asPath} />
-                                </>
-                            )}
-                        </div>
-                    </>
-                )}
-            </>
+                <Comments term={asPath} />
+            </div>
         );
     },
 };
