@@ -3,9 +3,50 @@ title: 파일트리 (FileTree)
 comments: false
 ---
 
-import { Cards, Card} from 'nextra/components'
+import { Cards, Card, FileTree} from 'nextra/components'
 import MarkIcon from '/public/icon/arrow-left-16.svg'
 
 <Cards>
 <Card icon={<MarkIcon/>} title="돌아가기" href="/project/WikiBlog" />
 </Cards>
+
+<br/>
+# 파일트리
+
+파일트리는 디렉토리를 표현하는 `Nextra` 내장 기능입니다.
+
+```mdx
+import { FileTree } from 'nextra/components'
+```
+
+를 상단에 선언하여 사용할 수 있습니다.
+
+<FileTree>
+  <FileTree.Folder name="pages" defaultOpen>
+    <FileTree.File name="_meta.json" />
+    <FileTree.File name="contact.md" />
+    <FileTree.File name="index.mdx" />
+    <FileTree.Folder name="about">
+      <FileTree.File name="_meta.json" />
+      <FileTree.File name="legal.md" />
+      <FileTree.File name="index.mdx" />
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
+
+```mdx
+<FileTree>
+  <FileTree.Folder name="pages" defaultOpen>
+    <FileTree.File name="_meta.json" />
+    <FileTree.File name="contact.md" />
+    <FileTree.File name="index.mdx" />
+    <FileTree.Folder name="about">
+      <FileTree.File name="_meta.json" />
+      <FileTree.File name="legal.md" />
+      <FileTree.File name="index.mdx" />
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
+```
+
+위와 같이 사용합니다.

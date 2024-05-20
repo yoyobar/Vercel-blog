@@ -3,9 +3,44 @@ title: 콜아웃 (Callout)
 comments: false
 ---
 
-import { Cards, Card} from 'nextra/components'
+import { Cards, Card, Callout} from 'nextra/components'
 import MarkIcon from '/public/icon/arrow-left-16.svg'
 
 <Cards>
 <Card icon={<MarkIcon/>} title="돌아가기" href="/project/WikiBlog" />
 </Cards>
+
+<br/>
+# Callout
+`Callout`은 독자에게 중요한 정보를 강조하는 요소입니다. `Nextra`에서 빌트인 객체로 내장되어 있습니다.
+
+
+<Callout type="info">정보 표시</Callout>
+
+<Callout type="warning"> 경고 표시</Callout>
+
+<Callout type="error">에러 표시</Callout>
+
+<Callout >기본 표시</Callout>
+
+```md filename="Markdown"
+
+<Callout type="info">정보 표시</Callout>
+
+<Callout type="warning"> 경고 표시</Callout>
+
+<Callout type="error">에러 표시</Callout>
+
+<Callout >기본 표시</Callout>
+
+```
+
+`type`를 선언하여 이모지를 변경할 수 있습니다.
+
+```md filename="Markdown"
+
+<Callout type="error" emoji="🍅">이건 토마토 입니다.</Callout>
+
+```
+
+<Callout type="error" emoji="🍅">이건 토마토 입니다.</Callout>

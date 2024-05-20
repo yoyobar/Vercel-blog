@@ -3,9 +3,45 @@ title: 스텝 (Steps)
 comments: false
 ---
 
-import { Cards, Card} from 'nextra/components'
+import { Cards, Card, Steps} from 'nextra/components'
 import MarkIcon from '/public/icon/arrow-left-16.svg'
 
 <Cards>
 <Card icon={<MarkIcon/>} title="돌아가기" href="/project/WikiBlog" />
 </Cards>
+
+<br/>
+# 스텝
+
+스텝은 순차적인 작동을 표현하는 `Nextra` 내장 기능입니다.
+
+```mdx
+import { Steps } from 'nextra/components'
+```
+
+를 상단에 선언하여 사용할 수 있습니다.
+
+<Steps>
+### 단계 1
+
+1단계의 내용
+
+### 단계 2
+
+2단계의 내용
+
+</Steps>
+
+```mdx
+<Steps>
+### 단계 1
+
+1단계의 내용
+
+### 단계 2
+
+2단계의 내용
+
+</Steps>
+```
+`h3:{mdx}` 제목을 활용해서 시각적인 단계로 표현합니다.

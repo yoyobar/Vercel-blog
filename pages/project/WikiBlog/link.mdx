@@ -1,11 +1,51 @@
 ---
-title: Next.js 링크
+title: 링크 연결
 comments: false
 ---
 
-import { Cards, Card} from 'nextra/components'
+import { Cards, Card, Callout} from 'nextra/components'
 import MarkIcon from '/public/icon/arrow-left-16.svg'
 
 <Cards>
 <Card icon={<MarkIcon/>} title="돌아가기" href="/project/WikiBlog" />
 </Cards>
+
+<br/>
+# 링크 연결
+
+
+## Next.js 링크
+모든 `Markdown`링크는 자동으로 `Next.js` 링크로 변환됩니다. 즉 링크를 통해 페이지를 이동해도
+
+전체 페이지를 로드하지 않고, `SPA`처럼 클라이언트측에서 페이지가 로드됩니다.
+
+```md
+여기를 눌러 [here](/about) 더 알아보기
+```
+
+이는 아래와 동일한 동작을 합니다.
+
+```jsx filename="jsx"
+import Link from 'next/link'
+
+여기를 눌러 <Link href="/about">here</Link> 더 알아보기
+```
+
+효과적으로 페이지를 이동하는 기능을 `markdown`내에서 구현할 수 있습니다.
+
+## Next.js 이미지
+모든 `Markdown` 이미지는 자동으로 변환됩니다. 이미지의 사이즈를 조정할 필요가 없고 첨부가 간편해집니다.
+
+로딩되지 않은 이미지는 자동으로 블러 처리 됩니다.
+
+```md
+![Test](/img/2024-05-20-15-07.png)
+```
+
+![Test](/img/2024-05-20-15-07.png)
+
+렌더링 경로는 `public`이 기본이므로, 추가적인 경로를 사용하는 경우 위와 같이 사용할 수 있습니다.
+
+<Callout type="info">
+`Paste Image` 확장 프로그램을 설정하여, 간단하게 포스팅을 할 수 있습니다.
+</Callout>

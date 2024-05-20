@@ -2,6 +2,8 @@ const withNextra = require('nextra')({
     theme: 'nextra-theme-docs',
     themeConfig: './theme.config.jsx',
     standalone: true,
+    defaultShowCopyCode: true,
+    latex: true,
 });
 const nextConfig = {
     reactStrictMode: true,
