@@ -1,0 +1,15 @@
+{
+    "builds": [
+      {
+        "src": "next.config.js",
+        "use": "@vercel/next"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "headers": { "Cache-Control": "no-cache" },
+        "continue": true
+      }
+    ]
+  }
