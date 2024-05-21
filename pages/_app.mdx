@@ -4,7 +4,7 @@ import { Analytics } from '@vercel/analytics/react';
 export default function MyApp({ Component, pageProps }) {
     return (
             <>
-                <Analytics/>
+                <Analytics id={process.env.NEXT_PUBLIC_VERCEL_API}/>
                 <Component {...pageProps} />
             </>
     )
