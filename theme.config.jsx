@@ -170,18 +170,23 @@ export default {
 };
 
 export function Indicator() {
+    let timer = null;
     const [currentScroll, setCurrentScroll] = useState(0);
 
     useEffect(() => {
         const updateScroll = () => {
-            const currentProgress = window.scrollY;
-            const scrollHeight = document.body.scrollHeight - window.innerHeight;
-            if (scrollHeight) {
-                setCurrentScroll(Number((currentProgress / scrollHeight).toFixed(2)) * 100);
+            //? 쓰로틀 200ms
+            if (!timer) {
+                timer = setTimeout(() => {
+                    timer = null;
+                    const currentProgress = window.scrollY;
+                    const scrollHeight = document.body.scrollHeight - window.innerHeight;
+                    if (scrollHeight) {
+                        setCurrentScroll(Number((currentProgress / scrollHeight).toFixed(2)) * 100);
+                    }
+                }, 200);
             }
         };
-
-        console.log(currentScroll);
 
         window.addEventListener('scroll', updateScroll);
 
