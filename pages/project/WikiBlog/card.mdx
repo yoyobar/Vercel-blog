@@ -1,0 +1,34 @@
+---
+title: 카드 (Cards)
+comments: false
+---
+
+import { Cards, Card, FileTree} from 'nextra/components'
+import {Icon} from '/utils/Module.jsx'
+import {Preview} from '/utils/Module'
+
+<Cards>
+<Card icon={<Icon.arrow_left/>} title="돌아가기" href="/project/WikiBlog" />
+</Cards>
+
+## Cards 내장 기능
+
+독자에게 빠른 링크 하이라이팅을 제공하는 `Cards` 기능이 내장되어 있습니다. 해당 라우터는 클라이언트 렌더링을 지원하므로 <br/>
+빠르고 안정적입니다.
+
+```jsx
+import { Cards, Card} from 'nextra/components'
+import {Icon} from '/utils/Module.jsx'
+
+<Cards>
+<Card icon={<Icon.arrow_left/>} title="홈으로" href="/" />
+</Cards>
+```
+
+<Preview>
+<Cards>
+<Card icon={<Icon.arrow_left/>} title="홈으로" href="/" />
+</Cards>
+</Preview>
+
+`icon`은 옵션이므로, 아이콘이 없는경우도 사용할 수 있습니다. 간단한 구조로 마크다운처럼 사용 가능합니다.

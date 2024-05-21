@@ -25,5 +25,11 @@
       },
     "filetree": {
         "display": "hidden"
+      },
+      "icon": {
+        "display": "hidden"
+      },
+      "card": {
+        "display": "hidden"
       }
 }

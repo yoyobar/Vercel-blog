@@ -3,10 +3,13 @@ comments: false
 ---
 
 import { Cards, Card} from 'nextra/components'
+import {Icon} from '/utils/Module.jsx'
 
+<Cards>
+<Card icon={<Icon.arrow_left/>} title="돌아가기" href="/blog" />
+</Cards>
 
-
-자바스크립트 내용을 정리합니다.
+## 개념
 <Cards>
 <Card title="자바스크립트란" href="/blog/JavaScript/01_js"/>
 <Card title="브라우저의 동작 원리" href="/blog/JavaScript/02_js"/>
@@ -28,3 +31,5 @@ import { Cards, Card} from 'nextra/components'
 <Card title="프로미스, Async / Await" href="/blog/JavaScript/18_js"/>
 <Card title="제너레이터 Generator" href="/blog/JavaScript/19_js"/>
 </Cards>
+
+## Trouble Shooting

@@ -1,0 +1,66 @@
+---
+title: 아이콘 (Icon)
+comments: false
+---
+
+import { Cards, Card, FileTree} from 'nextra/components'
+import {Icon} from '/utils/Module.jsx'
+import {Preview} from '/utils/Module'
+
+<Cards>
+<Card icon={<Icon.arrow_left/>} title="돌아가기" href="/project/WikiBlog" />
+</Cards>
+
+
+## Icon 기능
+
+해당 블로그에는 깃허브의 [Oction](https://primer.style/foundations/icons) 을 그대로 모듈화한 아이콘 저장소가 등록 되어 있습니다.
+
+```jsx filename="utils/Module.jsx"
+function importAll(r) {
+    let icons = {};
+    r.keys().forEach((item, index) => {
+      const iconName = item
+        .replace('./', '') // "./" 제거
+        .replace('.svg', '') // ".svg" 제거
+        .replace('-16', '') // "-16" 제거
+        .replace('-12', '') // "-12" 제거
+        .replace(/-/g, '_'); // "-"를 "_"로 변경
+      icons[iconName] = r(item).default;
+    });
+    return icons;
+  }
+  
+  const icons = importAll(require.context('../public/icon', false, /\.svg$/));
+  
+  export const Icon = icons;
+```
+
+`Module.jsx`에서 관리하고 있으며, 규칙을 적용하여 `svg`를 관리하고 있습니다.
+<ul className="flex flex-col rounded-md bg-slate-100 p-2 gap-2">
+<li>* `./` 명칭 제거</li>
+<li>* `.svg` 명칭 제거</li>
+<li>* `-16` 접미사 제거</li>
+<li>* `-12` 접미사 제거</li>
+<li>* 하이픈(`-`)를 언더바(`_`)로 변경</li>
+</ul>
+
+
+`svgr/webpack` 라이브러리를 설치하여, 첨부된 모든 아이콘을 관리하고 있습니다. 위의 규칙을 참고하여 예시를 들어보겠습니다. <br/>
+
+```jsx filename="mdx"
+
+import {Icon} from '/utils/Module.jsx'
+
+<Icon.alert/>
+
+```
+
+<Preview>
+<Icon.alert/>
+</Preview>
+
+위와 같이 [Oction](https://primer.style/foundations/icons)의 명칭을 그대로 사용하는 `svg` 파일이므로, 간단하게 아이콘을 첨부할 수 있습니다.
+
+
+

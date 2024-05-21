@@ -4,9 +4,7 @@ comments: false
 ---
 
 import {Cards, Card } from 'nextra/components'
-import BlogIcon from '/public/icon/project-roadmap-16.svg'
-import ProjectIcon from '/public/icon/browser-16.svg'
-import PortFolioIcon from '/public/icon/person-16.svg'
+import {Icon} from '/utils/Module.jsx'
 
 ## About This Blog
 
@@ -18,9 +16,9 @@ import PortFolioIcon from '/public/icon/person-16.svg'
 추후 같은 에러를 미연에 방지하고자 학습기록용으로 남깁니다.
 
 <Cards>
-<Card icon={<BlogIcon/>}title="블로그" href="http://localhost:3000/blog/HTML/01_html"/>
-<Card icon={<ProjectIcon/>} title="개인 프로젝트" href="http://localhost:3000/project"/>
-<Card icon={<PortFolioIcon/>} title="포트 폴리오" href="http://localhost:3000/about"/>
+<Card icon={<Icon.project_roadmap/>}title="블로그" href="/blog"/>
+<Card icon={<Icon.browser/>} title="개인 프로젝트" href="/project"/>
+<Card icon={<Icon.person/>} title="포트 폴리오" href="/about"/>
 </Cards>
 
 
