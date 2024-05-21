@@ -3,6 +3,11 @@ title: 'Home'
 comments: false
 ---
 
+import {Cards, Card } from 'nextra/components'
+import BlogIcon from '/public/icon/project-roadmap-16.svg'
+import ProjectIcon from '/public/icon/browser-16.svg'
+import PortFolioIcon from '/public/icon/person-16.svg'
+
 ## About This Blog
 
 이 블로그는 제가 학습하면서 겪은 에러와 여러가지 학습내용을 저장하는
@@ -11,5 +16,14 @@ comments: false
 내용은 주관적인 경우가 있으며 일방적인 신용은 권장 드리지 않습니다. <br/>
 
 추후 같은 에러를 미연에 방지하고자 학습기록용으로 남깁니다.
+
+<Cards>
+<Card icon={<BlogIcon/>}title="블로그" href="http://localhost:3000/blog/HTML/01_html"/>
+<Card icon={<ProjectIcon/>} title="개인 프로젝트" href="http://localhost:3000/project"/>
+<Card icon={<PortFolioIcon/>} title="포트 폴리오" href="http://localhost:3000/about"/>
+</Cards>
+
+
+
 
 

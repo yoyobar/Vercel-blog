@@ -1,0 +1,369 @@
+---
+title: 04. 타입의 추론, 단언, 좁히기
+---
+
+# 개요 
+
+타입스크립트는 타입이 할당되어있지 않은 값은 타입을 스스로 `추론`하여 할당한다.
+
+이 추론하는 타입은 보통 범용적인 타입을 할당시킨다.
+
+이러한 특성을 활용해 개발자는 타입을 단언하거나, 타입을 좁히는등으로 타입을 강제할 수 있다.
+
+## 타입의 추론
+
+```tsx
+let a = 10;
+//number Type
+
+let b = 'type Script'
+//string Type
+
+let c = null
+//null Type
+```
+
+- 변수에는 범용적으로 타입이 적용되는걸 확인할 수 있다.
+
+```tsx
+let arr = [1,2,3]
+let [one, two, three] = arr
+//number Type, 구조분해할당도 적용됨
+
+let obj = {
+	name: '김민수',
+	id: 1,
+}
+let {name, id} = obj;
+//string, number Type, 구조분해할당도 적용됨
+```
+
+- 배열과 객체의 구조분해할당에서도 문제없이 타입은 추론되어 적용된다.
+
+```tsx
+function func() {
+	return true;
+}
+//boolean Type
+
+function func2(message = 'hello') {
+	return message
+}
+```
+
+- 함수의 경우 리턴 값을 기준으로 타입이 추론되어 적용된다.
+- 매개변수의 경우 기본 값을 기준으로 타입이 추론되어 적용된다.
+
+```tsx
+//최적 공통 타입(Best Common Type)
+let arr = [1, 'hello'];
+```
+
+- 다양한 타입의 요소를 담을 경우, 해당 요소는 유니온(합집합)타입으로 추론된다. `number | string`
+
+
+import {Callout} from 'nextra/components'
+
+<Callout type="warning">
+주의점
+</Callout>
+
+- `let a` 등, 변수에 값이 할당되어 있지 않은 경우  `any Type`으로 추론된다.
+- `const a` 의 경우 자신의 값을 기준으로 `리터럴`로 추론된다. 이는 `const`는 수정될 수 없기 때문이다.
+
+## 타입의 단언
+
+객체등에서 초기화를 할 당시에는 빈 객체를 넣어두고 싶다고 가정해보자, 
+
+인덱스 시그니처를 활용하면 존재하지 않는 키를 할당할 수는 있지만, 빈값으로 초기화하진 못한다.
+
+이럴때 사용하는게 타입의 단언이다.
+
+```tsx
+type Person = {
+	name: string;
+	id: number;
+}
+
+let user1: Person = {} as Person;
+user1.name = '김민수';
+user1.id = 13;
+
+```
+
+…as 문법을 활용하여 타입스크립트에게 해당 객체는 Person타입을 만족한다고 명시적으로 나타내는 것이다.
+
+이러한 …as문법은 존재하지 않는 타입을 할당할때도 요긴하게 활용할 수 있다.
+
+```tsx
+type Person = {
+	name: string;
+	id: number;
+}
+
+let user1: Person = {
+	name: '김민수'
+	id: 13,
+	skill: 'ts'
+} as Person
+```
+
+위 코드에서는 skill이라는 초과프로퍼티가 존재하지만, …as 를 활용하여 명시적으로 나타내어 통과하였다.
+
+### Const 단언
+
+```tsx
+let cat = {
+	name: '모모',
+	color: 'lightblue'
+} as const
+```
+
+객체나 변수 자체에 `as const` 를 적용할 경우, 해당 객체나 변수는 `readonly`로서 작동한다.
+
+### Non Null 단언
+
+```tsx
+type Post = {
+	title: string;
+	author?: string;
+}
+
+let post:Post = {
+	title: '게시글',
+};
+
+const len:number = post.author!.length;
+```
+
+값 뒤에 `!`를 붙일 경우, 해당값이 `undefined`나 `null`이 아니라고 명시할 수 있다. 
+
+다만 이는 실제로 그런 값이 오지 않는다고 확신할 때만 사용하는것이 좋겠다.
+
+### 주의점
+
+이러한 타입단언에도 조건이 존재한다.
+
+- A가 B의 슈퍼타입이거나, 서브타입 일 것
+
+```tsx
+let num1 = 10 as never; // O, never는 모두의 서브타입
+let num2 = 10 as unknown; // O, unknown은 모두의 슈퍼타입
+let num3 = 10 as string; // X, 이는 맞지않음
+
+//강제 적용
+let num4 = 10 as unknown as string //O, 문법적으로 가능함
+```
+
+다중단언을 활용하여 문법적으로 통과시킬수 있지만, 이는 좋지않은 코드방식이다. 
+
+가독성을 헤치고 예기치못한 버그를 일으킬 수 있기때문이다. 정말 어쩔수 없는 경우를 제외하고는 사용하지 말자.
+
+## 타입 좁히기
+
+- 타입 추론과정에서 `if` 를 활용하여 타입을 좁혀서 추론시킬 수 있다.
+- 타입 추론과정에서 서로소 유니온 타입을 활용하여 타입을 좁혀서 추론시킬 수 있다.
+
+`if를 활용해 타입 좁히기`
+
+```tsx
+function func(value: number | string) {
+	value.toFixed() //오류, number의 메소드
+	value.toUpperCase() //오류, string의 메소드
+}
+```
+
+위와 같이 적용해보려고해도, 오류가 발생하는걸 확인할 수 있다.
+
+이런경우, 타입 좁히기로 해당 타입의 범위를 조정해야 활용할 수 있게 된다.
+
+```tsx
+function func(value: number | string) {
+	if(typeof value === 'number') value.toFixed() //O
+	if(typeof value === 'string') value.toUpperCase() //O
+}
+```
+
+이렇게 조건문을 활용해서 타입을 좁힐 수 있다. 단, 내장 빌트인 객체일 경우는 어떻게 검증할까?
+
+```tsx
+function func(value: number | string | Date) {
+	if(typeof value === 'number') {
+		console.log('this is number')
+	} else if (typeof value === 'string'){
+		console.log('this is string')
+	} else if (value instanceOf Date) {
+		console.log('this is Date')
+	}
+}
+```
+
+내장 객체의 경우 instanceOf로 타입을 좁힐 수 있다. 그럼, 사용자 객체의 경우는 어떻게 검증할까?
+
+```tsx
+type Person = {
+	name: string;
+	age: number;
+}
+
+function func(value: number | string | Date | Person) {
+	if(typeof value === 'number') {
+		console.log('this is number')
+	} else if (typeof value === 'string'){
+		console.log('this is string')
+	} else if (value instanceOf Date) {
+		console.log('this is Date')
+	} else if (value && 'age' in value){
+		console.log('this is Person')
+	}
+}
+```
+
+..in 메서드를 활용해서 값을 검증해야한다. 하지만 가면갈수록 가독성이 아주 문제가 되고있다.
+
+꼭 이러한 방법을 써야되는걸까?
+
+`서로소 유니온 타입 좁히기`
+
+각각의 객체가 서로소 로서 존재할 경우, `switch`문을 이용해서 아주쉽게 타입을 좁힐 수 있다.
+
+```tsx
+type Admin = {
+	role: 'ADMIN'
+	name: string;
+}
+type User = {
+	role: 'USER'
+	name: string;
+}
+type Guest = {
+	role: 'GUEST'
+	name: null;
+}
+```
+
+위와 같은 객체가 3개 존재한다고 해보자, 각각 `name`이라는 키가 존재하지만, `role`이라는 타입이 리터럴 타입으로 각자에게 해당되어있다. 이는 다르게 말하면 이 3가지의 값은 서로소 관계에 있다고 할 수 있다.
+
+```tsx
+type Admin = {
+	role: 'ADMIN'
+	name: string;
+}
+type User = {
+	role: 'USER'
+	name: string;
+}
+type Guest = {
+	role: 'GUEST'
+	name: null;
+}
+type Info = Admin | User | Guest
+
+function userInfo (user:Info) {
+	switch(user.role){
+		case 'ADMIN':
+		(...)
+		break;
+		case 'USER':
+		(...)
+		break;
+		case 'GUEST':
+		(...)
+		break;
+	}
+}
+```
+
+이렇게 간단하게 `Type`을 좁힐 수 있다.
+
+### `타입의 유니온(합집합),  인터섹션(교집합)`
+
+위와 같이 타입을 섞는 경우, 유니온과 인터섹션 방식이 존재한다. `|`와 `&`로 나타낼 수 있다.
+
+```tsx
+type Dog = {
+	name: string;
+	color: string;
+}
+
+type People = {
+	name: string;
+	age: number;
+}
+
+type Union = Dog | People
+
+let obj1:Union = {
+	name: '시츄',
+	color: 'brown',
+} // O
+
+let obj2:Union = {
+	name: '김민수',
+	age: 27,
+} // O
+
+let obj3:Union = {
+	name: '모모',
+	age: 6,
+	color: 'lightblue',
+} // O
+
+let obj4:Union = {
+	color: 'red',
+	age: 15,
+} // X
+```
+
+유니온 타입은 이름그대로 합집합을 나타낸다. 
+
+합집합에는 모든요소가 존재하거나, 각각의 요소만 가지고 있을 경우가 해당된다. 
+
+따라서 `obj4` 는 적용할 수 없다.
+
+![sample](/img/2024-05-21-10-34-02.png)
+
+그럼 교집합을 해보자, 교집합은 서로 공유하는 값만 해당하는 집합이다.
+
+대부분의 기본적인 타입은 서로 공통된 요소가 없기때문에 인터섹션을 적용할 수 없다. 객체에서 주로 사용된다.
+
+```tsx
+let variable: number & string; //never 타입으로 추론됨
+
+type Dog = {
+	name: string;
+	color: string;
+}
+
+type People = {
+	name: string;
+	age: number;
+}
+
+type Union = Dog & People
+
+let obj1:Union = {
+	name: '시츄',
+	color: 'brown',
+} // X
+
+let obj2:Union = {
+	name: '김민수',
+	age: 27,
+} // X
+
+let obj3:Union = {
+	name: '모모',
+	age: 6,
+	color: 'lightblue',
+} // O
+
+let obj4:Union = {
+	color: 'red',
+	age: 15,
+} // X
+```
+
+![sample](/img/2024-05-21-10-35-44.png)
+
+위와 같은 형태로 표현할 수 있다. 따라서 `obj3` 을 제외한 모든 객체는 적용될 수 없다.

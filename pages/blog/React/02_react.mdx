@@ -1,0 +1,161 @@
+---
+title: 02. 렌더링 과정과 useEffect
+---
+
+import {Steps} from 'nextra/components'
+
+## 렌더링 과정
+
+React의 렌더링과정은 생명주기(Life-Cycle)이 존재한다. 
+
+이러한 특성을 이해한다면 `UseEffect Hook`을 활용성있게 사용할 수 있을것이다.
+
+
+<Steps>
+ ### 최초 실행 `(Mount)`
+
+리액트 페이지가 최초로 렌더링 되면서 각종 컴포넌트들이 마운트 되는 과정.
+
+ ### 리렌더링 `(Rendering)`
+
+리액트 페이지의 `Event`가 발생하여 해당 컴포넌트가 재렌더링 되는 과정,  버튼을 누르는 이벤트 등이 해당한다.
+
+ ### 종료 `(Unmount)`
+
+해당 컴포넌트의 렌더링이 종료하는 과정, 특정 조건에 화면에 렌더링 되었다가 사라지는 경우를 생각하면 된다.
+</Steps>
+
+
+## `useEffect Hook`
+
+기본적으로 `import { useEffect } from ‘react’`로 해당 컴포넌트에서 활용 할 수 있다.
+
+라이프 사이클에 맞춰 작동하는 기능을 구현할 수 있다. 
+
+첫 매개 변수로 콜백함수를 받고
+
+두번째로 받는 매개 변수가 의존성 배열 `(Depth)` 라고 불린다. 
+
+특정 값을 기준으로 해당 값의 라이프 사이클에 따라서  작동여부를 제어할 수 있다.
+
+### 1. 최초 실행 `(Mount)`
+
+```jsx
+import { useEffect } from 'react'
+
+default export function App() {
+
+	useEffect(() => {
+		console.log('Mount')
+	},[])
+	
+	return(...)
+}
+```
+
+해당 useEffect 훅은 첫 Mount되었을때만 실행된다. 
+
+특정 값을 불러오거나, 특정 조건을 파악하고 새 클래스를 할당하는등, 다양한 방식으로 활용할 수 있다.
+
+`예시) LocalStorage에 저장된 값을 불러오는 경우`
+
+```jsx
+import { useEffect, useState } from 'react'
+
+default export function App() {
+	const [data, setData] = useState([{}])
+
+	useEffect(() => {
+			const loadData = JSON.parse(localStorage.getItem('data'))
+			setData(loadData)
+	},[])
+	
+
+}
+```
+
+이최초로 App 컴포넌트가 마운트될때, 기존의 저장되어있던 LocalStorage의 값을 불러올 수 있을 것이다.
+
+### 2. 리렌더링 `(Rendering)`
+
+리 렌더링의 경우 2가지 조건이 있을 것이다.
+
+- 첫 마운트 이후 렌더링 되는 경우
+- 매 렌더링 마다 작동하는 경우
+
+`예시) LocalStorage에 값을 저장하는 경우`
+
+```jsx
+import { useEffect, useState, useRef } from 'react'
+
+default export function App() {
+	const [data, setData] = useState([{}])
+	const ready = useRef(false)
+
+	useEffect(() => {
+		if(ready){
+			const saveData = JSON.stringify(data);
+			localStorage.setItem('data', saveData);
+		}
+		ready = true;
+		return;
+	},[data])
+	
+}
+```
+
+만약 로컬스토리지에 저장하는 값이 마운트 될때도 작동한다면, 
+
+값을 불러오기전에 저장해버려 로컬스토리지의 값이 초기화 될것이다.  
+
+`useRef` 로 최초실행을 방지하고, 이후 `data`가 변동할때 마다 훅이 작동하게 세팅하였다.
+
+이럴 경우 문제없이 값을 저장하는데 사용할 수 있을 것이다.
+
+`예시) 매 렌더링마다 작동하는 경우` 
+
+```jsx
+import { useEffect, useState, useRef } from 'react'
+
+default export function App() {
+	const [data, setData] = useState([{}])
+
+	useEffect(() => {
+		console.log(`현재 데이터는 ${data} 입니다.`)
+	},[data])
+	
+}
+```
+
+매 데이터의 렌더링이 발생할 때 마다, 작동하게 되는 알림등으로 사용할 수 있다.
+
+광고 배너를 띄우거나, 특정 URL데이터를 호출하거나 하는등으로 활용할 수 있을 것이다.
+
+### 3. 종료 `(Unmount)`
+
+기존에 함수가 사라지는경우 작동할 수 있다. 
+
+`클린업` 함수로서 사용할 수 있다.
+
+```jsx
+import { useEffect, useState, useRef } from 'react'
+
+default export function App() {
+	const [time, setTime] = useState(new Date().getTime())
+	
+	const runningClock = setInterval(() => {
+		setTime(new Date().getTime())
+	},1000)
+	
+	useEffect(() => {
+		return () => {
+			clearInterval(runningClock)
+		}
+	},[time])
+```
+
+`App` 컴포넌트에서 해당방식으로 사용할 일은 없겠지만, 예시로 작성하였다.
+
+자식 컴포넌트에서 시계를 매초마다 렌더링할 때, 해당 시계를 눌러서 없앨 수 있다고 가정해보자.
+
+없앤 후에도 해당 함수는 계속해서 작동할 수 있다. 이러한 `클린업` 함수로서 활용할 수 있을 것이다.

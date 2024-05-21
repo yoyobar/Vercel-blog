@@ -1,6 +1,6 @@
 {
     "index": {
-      "title": "Home",
+      "title": "Wiki 홈",
       "type": "page"
     },
     "blog": {
@@ -9,10 +9,6 @@
     },
     "project": {
       "title": "Projects",
-      "type": "page"
-    },
-    "about": {
-      "title": "About",
       "type": "page"
     }
 }

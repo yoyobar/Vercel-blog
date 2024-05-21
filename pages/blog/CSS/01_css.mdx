@@ -197,6 +197,16 @@ Z축과 사용 방법은 같다.
         z-index: 1;
       }
 ```
+
+<Preview>
+<div className="flex text-right relative w-[100px] h-[50px]">
+  <div className="absolute z-40 left-0 w-[50px] h-[50px] bg-orange-400">div1</div>
+  <div className="absolute z-30 left-8 w-[50px] h-[50px] bg-red-400">div2</div>
+  <div className="absolute z-20 left-16 w-[50px]  h-[50px] bg-purple-400">div3</div>
+  <div className="absolute z-10 left-24 w-[50px] h-[50px] bg-green-400">div4</div>
+</div>
+</Preview>
+
  `z-index` 값이 `4` 인 `div1` 가 가장 앞으로 나타나게 된다.
     
 <hr/>

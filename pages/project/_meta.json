@@ -1,0 +1,11 @@
+{
+    "index": "Project 홈",
+    "AdminMe": "AdminMe",
+    "WeatherMe": "WeatherMe",
+    "WikiBlog": "WikiBlog",
+    "github_link": {
+        "title": "Github",
+        "href": "https://github.com/yoyobar",
+        "newWindow": true
+      }
+}

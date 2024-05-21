@@ -1,0 +1,64 @@
+---
+title: 04. Props drilling
+---
+
+우리는 `Props`를 공부할때 부모인자 → 자식 인자로 밖에 전달하지 못한다는 점을 기억할 것이다.
+
+그렇다면, 부모인자에게서 제공받은 값이 아주 깊은 자식요소에게 필요하다면 어떻게 할 것인가?
+
+![sample](/img/2024-05-21-11-12-03.png)
+
+가장 쉽게 떠오르는 해결책은 `Props`를 계속해서 건네주는 방법일 것이다.
+
+부모에서 자식으로, 자식에서 또 다른 자식으로, 계속해서 `props`를 건네주면 해결될 문제긴 하다.
+
+이를 `Props drilling`이라고 칭하며 좋은 코딩방식이라고 할 순 없다. 깊은 자식요소가 사용하는 `props`를 계속해서 작성하므로 가독성이 떨어지고, 유지보수하기 좋은 코드라고 하기 어려워지기 때문이다.
+
+당연히 리액트에서도 이 문제를 알고있고, 이를 해결하기위한 상태요소 관리 라이브러리인 `Redux`등이 있지만,
+
+기본적으로 제공하는 훅인 `createContext` `useContext`를 활용하여 이를 해결할 수 있다.
+
+![sample](/img/2024-05-21-11-12-14.png)
+
+`context`를 사용할 경우,  `props`를 별도의 공간으로 분리해서 직접 컴포넌트에게 전달해줄 수 있게 된다.
+
+이러면 코드의 수정도 간편해질 것이고, `useMemo`로 최적화가 되지않는 코드도 `useCallback`등과 결합하여 최적화를 진행시킬 수도 있을것이다. 직접 사용해보자.
+
+```jsx
+export const TodoStateContext = createContext();
+
+export default function App() {
+    const [todos, dispatch] = useReducer(reducer, [{}]);
+ (...)
+ 
+ return(
+			 <Header/>
+			 <TodoStateContext.Provider value={todos}>
+			 <Editor/>
+			 <Content/>
+			 </TodoStateContext.Provider>
+	 
+ )
+}
+```
+
+- `createContext`는 함수 외부에 선언한다. 함수가 재렌더링 될때마다 렌더링 될 이유가 없기 때문이다.
+- `createContext`를 Router처럼 HTML요소로서 전달하기 원하는 컴포넌트에 씌워서 값을 전달한다.
+
+이렇게 전달할 경우 해당 `props`는 자식요소 모두에게 전달된다. 자식요소들은 해당 `context`를 `import` 하여 변수에 초기화하여 직접적으로 사용할 수 있는것이다.
+
+```jsx
+import { useContext } from 'react';
+
+export default function Editor() {
+    const todos = useContext(TodoStateContext);
+    
+    return(
+	    (...)
+    )
+    }
+```
+
+만약 전달하고자 하는 `함수 / state`가 여러개 일 경우, `.provider`에서 객체로 묶어 전달할 수 있다.
+
+이럴 경우에는 `객체 분해할당`을 적절히 활용하여 사용할 수 있겠다.

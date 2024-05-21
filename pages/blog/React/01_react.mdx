@@ -1,0 +1,300 @@
+---
+title: 01. useState와 props
+---
+
+```
+//기본 환경
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+```
+
+import { useState } from 'react'
+
+우선은 리액트 V18버전의 기본으로 두고, 다른 라이브러리 없이 리액트를 사용해보고자 한다.
+
+`npx create-react-app ‘프로젝트명’`
+
+해당 콘솔로 내가 원하는 리액트 프로젝트를 생성할 수 있다. yarn같은 버전관리매니저 없이 진행하므로
+
+상당한 시간이 소요될 수 있다.
+
+우선 간단하게, `Hello.js`라는 컴포넌트를 만들고, `App.js`에서 이를 3번 사용하도록 구성해보겠다.
+
+```jsx
+//Hello.js
+
+
+
+export default function Hello() {
+
+    return (
+        <div className={styles.flex}>
+            <h1>Test</h1>
+            <button className={styles.button}>Change Name</button>
+        </div>
+    )
+}
+
+```
+
+```jsx
+//App.js
+import Hello from './component/Hello'
+
+function App() {
+    return (
+        <div className="App">
+            <Hello />
+            <Hello />
+            <Hello />
+        </div>
+    )
+}
+export default App
+```
+
+## useState
+
+리액트에서 DOM에 상태를 확인하여 반영해주는 `변수`라고 생각하면 된다.
+
+만약 `let`으로 변수를 선언하고, 이를 내용에 할당하면 어떻게 될까?
+
+```jsx
+export default function Hello() {
+    let name = 'Tom'
+
+    function nameChange() {
+        name = name === 'Tom' ? 'Jane' : 'Tom'
+    }
+
+    return (
+        <div className={styles.flex}>
+            <h1>{name}</h1>
+            <button onClick={nameChange} className={styles.button}>
+                Change Name
+            </button>
+        </div>
+    )
+}
+```
+
+export function Hello() {
+    let name = 'Tom'
+
+    function nameChange() {
+        name = name === 'Tom' ? 'Jane' : 'Tom'
+        alert(name)
+    }
+
+    return (
+        <div>
+            <h1>{name}</h1>
+            <button className="bg-indigo-400 hover:bg-indigo-600 p-2 transition text-white rounded-md" onClick={nameChange}>
+                Change Name
+            </button>
+        </div>
+    )
+}
+
+import {Preview} from '/utils/Module'
+
+<Preview>
+<Hello/>
+</Preview>
+
+
+눌러도 작동하지 않는다. React는 변수의 변화를 DOM에 구현해주지 않는다. 실제로 값은 변경되었지만,
+
+DOM상에서는 변하지 않는것이다.
+
+만약 자바스크립트라면 `document.getElement…`를 활용하여 해결해야 할 것이다. 하지만 React에는 `useState`라는 변수로서 사용가능한게 있다.
+
+```jsx
+export default function Hello() {
+    const [name, setName] = useState('Tom')
+
+    function nameChange() {
+        name === 'Tom' ? setName('Jane') : setName('Tom')
+    }
+
+    return (
+        <div className={styles.flex}>
+            <h1>{name}</h1>
+            <button onClick={nameChange} className={styles.button}>
+                Change Name
+            </button>
+        </div>
+    )
+}
+```
+export function Hello2() {
+    const [name, setName] = useState('Tom')
+
+    function nameChange() {
+        name === 'Tom' ? setName('Jane') : setName('Tom')
+    }
+
+    return (
+        <div>
+            <h1>{name}</h1>
+            <button className="p-2 text-white rounded-md bg-indigo-400 hover:bg-indigo-600 transition" onClick={nameChange}>
+                Change Name
+            </button>
+        </div>
+    )
+}
+
+<Preview>
+<div className="flex gap-2">
+    <Hello2/>
+    <Hello2/>
+    <Hello2/>
+</div>
+</Preview>
+
+
+작동하는걸 확인할 수 있다. 여기서 조금 의아할수도 있는데, 하나의 `useState`를 사용하는데 모든 버튼에 각각 기능이 작동하고 각각의 값이 할당된다.
+
+`React`에서는 컴포넌트별로 `State`를 관리하기 때문이다!
+
+따라서 `App.js`에서 각각의 컴포넌트 3개를 생성했기 때문에
+
+실제로 각각의 컴포넌트별로 따로 작동하는 것이다.
+
+또, `usestate`를 할당할때 분해구조할당을 사용하는걸 확인할 수 있는데, 이는 usestate내부에 두개의 함수가 배열로서 존재하기에 분해구조 할당으로 각각 할당하는 것이다.
+
+### Prop
+
+개발을 할 때 컴포넌트별로 할당할텐데, 컴포넌트별로 다른값을 사용하게 하고 싶다. 그렇지 못하다면
+
+굳이 컴포넌트로 조각을 내서 페이지를 만들어봣자 사용성이 떨어지지 않겠는가?
+
+그에따라 React에서는 `prop`라는 기능을 제공한다. `properties`의 약자인데, 한번 살펴보자.
+
+```jsx
+//app.js
+import Hello from './component/Hello'
+
+function App() {
+    return (
+        <div className="App">
+            <Hello age={10} />
+            <Hello age={15} />
+            <Hello age={20} />
+        </div>
+    )
+}
+export default App
+```
+
+각각의 컴포넌트에 `age`라는 값을 할당하였다. 이제 이 `age`는 `prop`에서 관여할 수 있다.
+
+```jsx
+//hello.js
+export default function Hello(prop) {
+    const [name, setName] = useState('Tom')
+
+    function nameChange() {
+        name === 'Tom' ? setName('Jane') : setName('Tom')
+        console.log(prop)
+    }
+
+    return (
+    (...)
+    )
+}
+
+```
+
+우선, `prop`으로 전달받은 값은 직접 수정할 수 없다.
+
+객체로서 값이 온다는건, 분해구조 할당으로 값만 가져올 수 있다는 뜻이기도 하다.
+
+```jsx
+//hello.js
+export default function Hello({age}) {
+    const [name, setName] = useState('Tom')
+
+    function nameChange() {
+        name === 'Tom' ? setName('Jane') : setName('Tom')
+        console.log(age)
+    }
+
+    return (
+    (...)
+    )
+}
+
+```
+
+이렇게 할경우, 받은 값은 숫자 데이터가 되는 것이다.
+
+그럼 이걸 어떻게 활용할 수 있을까? State에 prop에서 전달해준 값을 사용하면 되는것이다.
+
+```jsx
+export default function Hello({ age }) {
+    const [name, setName] = useState('Tom')
+    const [number, setNumber] = useState(age)
+
+    function nameChange() {
+        name === 'Tom' ? setName('Jane') : setName('Tom')
+    }
+
+    return (
+        <div className={styles.flex}>
+            <h1>
+                {name} {`(Age: ${number})`}
+            </h1>
+            <button onClick={nameChange} className={styles.button}>
+                Change Name
+            </button>
+        </div>
+    )
+}
+```
+
+
+
+
+export function Hello3({ age }) {
+    const [name, setName] = useState('Tom')
+    const [number, setNumber] = useState(age)
+
+    function nameChange() {
+        name === 'Tom' ? setName('Jane') : setName('Tom')
+    }
+
+    return (
+        <div>
+            <h1>
+                {name} {`(Age: ${number})`}
+            </h1>
+            <button className="bg-indigo-400 hover:bg-indigo-600 transition rounded-md p-2 text-white" onClick={nameChange}>
+                Change Name
+            </button>
+        </div>
+    )
+}
+
+export function Template() {
+
+    return(
+        <>
+            <Hello3 age={10}/>
+            <Hello3 age={20}/>
+            <Hello3 age={30}/>
+        </>
+    )
+}
+
+<Preview>
+<Template/>
+</Preview>
+
+
+
+각각의 age를 데이터에 할당받앗다.
+
+이렇게 버튼하나로 값이 변하는 작업을 완료했다.
+
+분해구조 할당과 함수의 활용을 잘해야 리액트를 잘한다고 할 수 있다. 
