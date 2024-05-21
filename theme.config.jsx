@@ -108,14 +108,7 @@ export default {
                     </defs>
                 </svg>
             </span>
-            <span
-                style={{
-                    marginLeft: '.4em',
-                    width: '200px',
-                }}
-            >
-                Trouble Wiki
-            </span>
+            <span className='w-[200px] ml-2'>Trouble Wiki</span>
         </>
     ),
     project: {
@@ -149,7 +142,7 @@ export default {
         placeholder: '찾는 내용을 검색..',
     },
     sidebar: {
-        defaultMenuCollapseLevel: 2,
+        defaultMenuCollapseLevel: 1,
     },
     footer: {
         text: (
@@ -165,12 +158,44 @@ export default {
         const { frontMatter } = useConfig();
         const { asPath } = useRouter();
         const isComment = frontMatter?.comments === false ? false : true;
-
         return (
-            <div style={{ fontFamily: "'Noto Sans KR'" }}>
+            <>
+                {frontMatter?.indicator !== false && <Indicator />}
+
                 {children}
                 {isComment && <Comments term={asPath} />}
-            </div>
+            </>
         );
     },
 };
+
+export function Indicator() {
+    const [currentScroll, setCurrentScroll] = useState(0);
+
+    useEffect(() => {
+        const updateScroll = () => {
+            const currentProgress = window.scrollY;
+            const scrollHeight = document.body.scrollHeight - window.innerHeight;
+            if (scrollHeight) {
+                setCurrentScroll(Number((currentProgress / scrollHeight).toFixed(2)) * 100);
+            }
+        };
+
+        console.log(currentScroll);
+
+        window.addEventListener('scroll', updateScroll);
+
+        return () => {
+            window.removeEventListener('scroll', updateScroll);
+        };
+    }, []);
+
+    return (
+        <div>
+            <span
+                style={{ transform: `translateX(${currentScroll - 100}%)` }}
+                className={'fixed bg-sky-400 h-1 w-full top-16 left-0 transition duration-75 rounded-md'}
+            />
+        </div>
+    );
+}

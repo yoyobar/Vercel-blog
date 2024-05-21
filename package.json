@@ -2,7 +2,7 @@
     "scripts": {
         "dev": "next dev",
         "build": "next build",
-        "postbuild": "next-sitemap && rm -rf .next/cache",
+        "postbuild": "next-sitemap",
         "start": "next start"
     },
     "dependencies": {

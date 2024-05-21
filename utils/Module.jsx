@@ -1,4 +1,5 @@
 
+
 export function Preview({ children }) {
     return (
         <>
@@ -26,3 +27,6 @@ function importAll(r) {
   
   export const Icon = icons;
   
+
+  // "postbuild": "next-sitemap && rm -rf .next/cache",
+
