@@ -137,6 +137,7 @@ export default {
                 <meta property='og:url' content={url} />
                 <meta property='og:title' content={frontMatter.title === undefined ? 'Wiki' : frontMatter.title} />
                 <meta property='og:image' content={frontMatter.image === undefined ? '' : frontMatter.image} />
+                <meta name='google-site-verification' content='onSmWbcZS5c26LUgdJ5abeBG1dpO8frURYsfGxofS78' />
                 <meta
                     property='og:description'
                     content={frontMatter.description === undefined ? 'Wiki기반 개인 블로그 입니다.' : frontMatter.description}
