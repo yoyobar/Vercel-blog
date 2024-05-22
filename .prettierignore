@@ -1,4 +1,3 @@
 *.json
 *.next
 *.mdx
-/utils/Module.jsx

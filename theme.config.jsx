@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useConfig, useTheme } from 'nextra-theme-docs';
 import Giscus from '@giscus/react';
 import { useEffect, useState } from 'react';
+import { Modal } from '/utils/Module';
 
 const Comments = ({ term }) => {
     const { systemTheme, theme } = useTheme();
@@ -158,10 +159,11 @@ export default {
         const { frontMatter } = useConfig();
         const { asPath } = useRouter();
         const isComment = frontMatter?.comments === false ? false : true;
+
         return (
             <>
                 {frontMatter?.indicator !== false && <Indicator />}
-
+                <Modal />
                 {children}
                 {isComment && <Comments term={asPath} />}
             </>
@@ -175,7 +177,7 @@ export function Indicator() {
 
     useEffect(() => {
         const updateScroll = () => {
-            //? 쓰로틀 200ms
+            //? 쓰로틀 10ms
             if (!timer) {
                 timer = setTimeout(() => {
                     timer = null;
@@ -184,7 +186,7 @@ export function Indicator() {
                     if (scrollHeight) {
                         setCurrentScroll(Number((currentProgress / scrollHeight).toFixed(2)) * 100);
                     }
-                }, 200);
+                }, 10);
             }
         };
 
@@ -199,7 +201,7 @@ export function Indicator() {
         <div>
             <span
                 style={{ transform: `translateX(${currentScroll - 100}%)` }}
-                className={'fixed bg-sky-400 h-1 w-full top-16 left-0 transition duration-75 rounded-md'}
+                className={'fixed bg-sky-400 h-1 w-full top-16 left-0 transition duration-75 rounded-md animate-pulse'}
             />
         </div>
     );
