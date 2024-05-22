@@ -1,11 +1,30 @@
 import { useModal } from '../store';
 import { useState, useEffect } from 'react';
+import { useTheme } from 'nextra-theme-docs';
 
 export function Preview({ children }) {
+    const { systemTheme, theme } = useTheme();
+    const [mode, setMode] = useState('border');
+
+    useEffect(() => {
+        switch (theme) {
+            case 'light':
+                setMode('border');
+                break;
+            case 'dark':
+                setMode('bg-[#2d313e] text-slate-400');
+                break;
+            case 'system':
+                if (systemTheme === 'light') setMode('border');
+                if (systemTheme === 'dark') setMode('bg-[#2d313e] text-slate-400');
+                break;
+        }
+    }, [theme]);
+
     return (
         <>
             <div className='text-sky-700 text-bold'>Preview</div>
-            <div className='p-2 w-full border rounded-md text-black'>{children}</div>
+            <div className={`${mode} p-2 w-full rounded-md text-black`}>{children}</div>
         </>
     );
 }
