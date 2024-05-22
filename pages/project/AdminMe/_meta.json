@@ -1,3 +1,7 @@
 {
-    "admin_01": "프로젝트 개요"
+    "admin_server": "Server 구현",
+    "admin_register": "Login 구현",
+    "admin_verify": "Verify 구현",
+    "admin_user": "User Page 구현",
+    "admin_admin": "Admin Page 구현"
 }

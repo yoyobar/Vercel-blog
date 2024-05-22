@@ -54,10 +54,10 @@ export function Modal() {
 
     return (
         <>
-            <div className='bg-sky-200 z-10 min-w-64 rounded-md font-semibold pt-1 fixed bottom-10 right-5'>
-                <div className='p-2'>{text}</div>
+            <div className='bg-sky-800 z-10 min-w-64 rounded-md font-semibold pt-1 fixed bottom-10 right-5'>
+                <div className='p-2 text-white'>{text}</div>
                 <div
-                    className='ml-1 mr-1 mb-1 h-1 rounded-md bg-green-700 animate-pulse'
+                    className='ml-1 mr-1 mb-1 h-1 rounded-md dark:bg-green-400 animate-pulse'
                     style={{ width: `${(indicator / 3000) * 100}%` }}
                 ></div>
             </div>

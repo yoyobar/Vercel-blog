@@ -4,6 +4,7 @@ title: "02. 브라우저의 동작원리"
 import {Callout} from 'nextra/components'
 import {Preview} from '/utils/Module'
 import {useState} from 'react'
+import {useModal} from '/store'
 
 크롬의 V8자바스크립트 엔진으로 빌드된 자바스크립트 런타임 환경 `Node.js` 의 등장으로 인해 자바스크립트는 웹 브라우저를 벗어나 서버와 애플리케이션에서도 활용되는 범용적인 개발언어가 되었다.
 
@@ -29,23 +30,20 @@ DOM 생성프로세스를 일시적으로 중지하고 자바스크립트 엔진
 console.log(1);
 setTimeout(() => console.log(2), 1000);
 console.log(3);
-
-
-//1, 3, 2
 ```
 export function Counter ()  {
+    const {modalOn} = useModal()
     const [count, setCount] = useState([])
 
     const btnHandler = () => {
-        console.log(1);
-        setTimeout(() => console.log(2), 1000);
-        console.log(3);
+        modalOn(`결과 : 1`)
+        setTimeout(() => modalOn(`결과 : 2`),1000)
+        setTimeout(() => modalOn(`결과 : 3`),200)
     }
     
     return (
         <>
             <button className="p-2 transition rounded-md bg-indigo-400 hover:bg-indigo-600 text-white " onClick={btnHandler}>TEST</button>
-            <div>F12를 눌러 확인해보세요.</div>
         </>
     )
 }

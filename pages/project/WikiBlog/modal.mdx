@@ -1,0 +1,134 @@
+---
+title: 모달 기능 (Modal)
+comments: false
+indicator: false
+---
+
+import { Cards, Card, Callout} from 'nextra/components'
+import {Icon, Preview, Button} from '/utils/Module'
+import {useModal} from '/store'
+
+<Cards>
+<Card icon={<Icon.arrow_left/>} title="돌아가기" href="/project/WikiBlog" />
+</Cards>
+
+# 개요
+
+해당 블로그에 `window.alert()`함수를 대신해서 사용할 수 있는 `Modal` 모듈을 등록하였습니다.
+
+## 기능 구조
+
+인디케이터를 `10ms` 기준으로 갱신하고 `2500ms`뒤 사라지는 `Modal` 창입니다.<br/>
+`Modal`의 전역 상태는 `zustand`를 통해 관리되고 있습니다.
+
+```tsx filename="store.tsx"
+interface StoreType {
+    visible: boolean;
+    text: string;
+
+    modalOn: (text: string) => void;
+}
+
+export const useModal = create<StoreType>((set) => ({
+    visible: false,
+    text: '',
+
+    modalOn: (text) => {
+        set((state) => ({
+            text: text,
+            visible: true,
+        }));
+    },
+    modalClose: (text) => {
+        set((state) => ({
+            text: text,
+            visible: false,
+        }));
+    },
+}));
+```
+
+
+## 사용 방법
+
+```mdx filename="Markdown"
+import {useModal} from '/store'
+import {Button} from '/utils/Module'
+
+
+export function Test () {
+    const {modalOn} = useModal()
+
+    const btnHandler = () => {
+        modalOn('모달 창 테스트')
+    }
+
+    return(
+        <Button onClick={btnHandler} text="테스트" />
+    )
+}
+
+<Test/>
+```
+
+export function Test () {
+    const {modalOn} = useModal()
+
+    const btnHandler = () => {
+        modalOn('모달 창 테스트')
+    }
+
+    return(
+        <Button onClick={btnHandler} text="테스트" />
+    )
+}
+
+<Preview>
+<Test/>
+</Preview>
+
+컴포넌트를 만들고 컴포넌트 내부에서 선언하여 사용합니다.
+
+
+### 표기 가능한 타입
+- `변수`
+- `함수`
+- `비동기 처리`
+
+
+```mdx filename="Markdown"
+export function Test2 () {
+    const {modalOn} = useModal()
+    let number = 10
+
+    const btnHandler = () => {
+        modalOn(number)
+    }
+
+    return(
+        <Button onClick={btnHandler} text="변수 테스트" />
+    )
+}
+```
+
+export function Test2 () {
+    const {modalOn} = useModal()
+    let number = 10
+
+    const btnHandler = () => {
+        modalOn(number)
+    }
+
+    return(
+        <Button onClick={btnHandler} text="변수 테스트" />
+    )
+}
+
+<Preview>
+<Test2/>
+</Preview>
+
+
+<Callout type="error">
+`Object`, `Array`, `Generator`의 경우 작동하지 않으므로 주의
+</Callout>

@@ -3,6 +3,7 @@ title: 19. 제너레이터 Generator
 ---
 
 import {Preview} from '/utils/Module'
+import {useModal} from '/store'
 
 함수의 실행을 중간에 멈췄다가 재개할 수 있는 문법이다. `*`로 함수에 표기하여 사용한다.
 
@@ -26,8 +27,8 @@ a.next() // 2 3, done: false
 a.next() // 4, done: false
 a.next() //완료, done: true
 ```
-
 export function Test1() {
+const {modalOn} = useModal()
     function* fn() {
 	alert(1)
 	yield 1;

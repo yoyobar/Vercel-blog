@@ -3,6 +3,8 @@ title: "05. 객체 메소드"
 ---
 
 import {Callout} from 'nextra/components'
+import {Preview, Button} from '/utils/Module'
+import {useModal} from '/store'
 
 ## 계산된 프로퍼티(Computed Property)
 
@@ -19,7 +21,7 @@ let numbers = {
 
 ## 객체의 메소드
 
-### Object.assgin({}, origin)
+### Object.assgin(`{}`, origin)
 
 ```jsx
 let object = {
@@ -58,10 +60,28 @@ let object = {
 	id: 1325,
 };
 let key = Object.keys(object);
-//[name, id]
 ```
 
 객체의 `key` 값을 배열에 담아 리턴해준다.
+
+export function Keys () {
+const {modalOn} = useModal()
+
+const btnHandler = () => {
+	modalOn(`값 : [name, id]`)
+}
+
+return (
+	<div>
+	<Button onClick={btnHandler} text="key"/>
+	</div>
+)
+	
+}
+
+<Preview>
+<Keys/>
+</Preview>
 
 ---
 
@@ -73,10 +93,28 @@ let object = {
 	id: 1325,
 };
 let value = Object.values(object);
-//['object', 1325]
 ```
 
 객체의 `value` 값을 배열에 담아 리턴해준다.
+
+export function Values () {
+const {modalOn} = useModal()
+
+const btnHandler = () => {
+	modalOn(`값 : ['object', 1325]`)
+}
+
+return (
+	<div>
+	<Button onClick={btnHandler} text="values"/>
+	</div>
+)
+	
+}
+
+<Preview>
+<Values/>
+</Preview>
 
 ---
 
@@ -88,13 +126,28 @@ let object = {
 	id: 1325,
 };
 let entries = Object.entries(object);
-//[
-//['name','object']
-//['id', 1325]
-//]
 ```
 
 객체의 `key, value`값을 이중 배열에 담아 리턴해준다. 각 0번은 key, 1번은 value다.
+
+export function Entires () {
+const {modalOn} = useModal()
+
+const btnHandler = () => {
+	modalOn(`값 : [ ['name', 'object'], ['id', 1325] ]`)
+}
+
+return (
+	<div>
+	<Button onClick={btnHandler} text="entires"/>
+	</div>
+)
+	
+}
+
+<Preview>
+<Entires/>
+</Preview>
 
 ---
 
@@ -106,14 +159,30 @@ let arr = [
     ['id', 1325],
 ];
 let entries = Object.fromEntries(arr);
-//{
-//name: 'object',
-//id: 1325,
-//};
 
 ```
 
 이중 배열을 객체로 담아 리턴해준다.  각 0번은 `key`, 1번은 `value`다.
+
+export function FromEntires () {
+const {modalOn} = useModal()
+
+const btnHandler = () => {
+	modalOn(`값 : { name: 'object', id: 1325 }`)
+}
+
+return (
+	<div>
+	<Button onClick={btnHandler} text="fromEntires"/>
+	</div>
+)
+	
+}
+
+<Preview>
+<FromEntires/>
+</Preview>
+
 
 ## 그외 참고사항
 

@@ -3,6 +3,7 @@ title: 18. 프로미스, async / await
 ---
 
 import {Preview} from '/utils/Module'
+import {useModal} from '/store'
 
 ## 프로미스
 
@@ -323,8 +324,9 @@ async function farm() {
 }
 farm();
 ```
-
 export function Farm() {
+const {modalOn} = useModal()
+
         const f1 = (message) => {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
@@ -356,14 +358,14 @@ export function Farm() {
     async function farm() {
         try {
             const result = await f1();
-            alert(result)
+            modalOn(result)
             const result2 = await f2(result);
-            alert(result2)
+            modalOn(result2)
             const result3 = await f3(result2);
-            alert(result3)
+            modalOn(result3)
             
         } catch (error) {
-            alert(error)
+            modalOn(`${error}`)
         }
     }
 
