@@ -82,5 +82,3 @@ function importAll(r) {
 const icons = importAll(require.context('../public/icon', false, /\.svg$/));
 
 export const Icon = icons;
-
-// "postbuild": "next-sitemap && rm -rf .next/cache",
