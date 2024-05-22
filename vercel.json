@@ -1,0 +1,5 @@
+{
+    "env": {
+        "VERCEL_GIT_SHALLOW_CLONE": "1"
+      }
+}
