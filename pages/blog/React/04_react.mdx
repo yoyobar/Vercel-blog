@@ -2,9 +2,20 @@
 title: 04. Props drilling
 ---
 
+import {Callout} from 'nextra/components'
+import {Preview, Button} from '/utils/Module'
+import {useState} from 'react'
+
+
+<br/>
+
+# 개요
+
 우리는 `Props`를 공부할때 부모인자 → 자식 인자로 밖에 전달하지 못한다는 점을 기억할 것이다.
 
 그렇다면, 부모인자에게서 제공받은 값이 아주 깊은 자식요소에게 필요하다면 어떻게 할 것인가?
+
+## Props Drilling
 
 ![sample](/img/2024-05-21-11-12-03.png)
 
@@ -12,53 +23,178 @@ title: 04. Props drilling
 
 부모에서 자식으로, 자식에서 또 다른 자식으로, 계속해서 `props`를 건네주면 해결될 문제긴 하다.
 
-이를 `Props drilling`이라고 칭하며 좋은 코딩방식이라고 할 순 없다. 깊은 자식요소가 사용하는 `props`를 계속해서 작성하므로 가독성이 떨어지고, 유지보수하기 좋은 코드라고 하기 어려워지기 때문이다.
+이를 `Props Drilling`이라고 칭하며 좋은 코딩방식이라고 할 순 없다. <br/>
+깊은 자식요소가 사용하는 `props`를 계속해서 작성하므로 가독성이 떨어지고 <br/>
+유지보수하기 좋은 코드라고 하기 어려워지기 때문이다. <br/>
+만약 9번째 자식요소에게 `props`가 필요없게 될경우, 코드를 9번 수정해야한다는 소리다.
 
 당연히 리액트에서도 이 문제를 알고있고, 이를 해결하기위한 상태요소 관리 라이브러리인 `Redux`등이 있지만,
-
 기본적으로 제공하는 훅인 `createContext` `useContext`를 활용하여 이를 해결할 수 있다.
 
 ![sample](/img/2024-05-21-11-12-14.png)
 
-`context`를 사용할 경우,  `props`를 별도의 공간으로 분리해서 직접 컴포넌트에게 전달해줄 수 있게 된다.
+`context API`를 사용할 경우, <br/>  `props`를 별도의 공간으로 분리해서 직접 컴포넌트에게 전달해줄 수 있게 된다.
 
-이러면 코드의 수정도 간편해질 것이고, `useMemo`로 최적화가 되지않는 코드도 `useCallback`등과 결합하여 최적화를 진행시킬 수도 있을것이다. 직접 사용해보자.
+예시를 한번 다뤄보자
 
-```jsx
-export const TodoStateContext = createContext();
+## Context API
 
-export default function App() {
-    const [todos, dispatch] = useReducer(reducer, [{}]);
- (...)
- 
- return(
-			 <Header/>
-			 <TodoStateContext.Provider value={todos}>
-			 <Editor/>
-			 <Content/>
-			 </TodoStateContext.Provider>
-	 
- )
+```jsx filename="context/dataContext.jsx"
+
+const {useState, createContext, useContext} from 'react';
+
+const dataContext = createContext();
+
+export const dataProvider = ({children}) => {
+	const [count, setCount] = useState(0);
+	
+	return (
+		<dataContext.Provider value={{count, setCount}}>
+			{children}
+		</dataContext.Provider>
+	)
+}
+
+export const useData = () => {
+	return useContext(dataContext)
+}
+
+```
+
+`context`라는 별개의 폴더를 만들어 전역상태를 관리하고, 이를 `app.jsx`에 등록해둔다.
+
+<Callout type="info">
+`useData`의 경우 사용하고자 하는 컴포넌트에서도 선언 할 수는 있다.
+</Callout>
+
+- 재사용성 : `useData`를 `context` 에 따로 정의하면 여러 컴포넌트간 재활용이 가능하다.
+- 가독성 및 유지보수 : 컴포넌트별로 선언할 경우, 코드가 반복되고 가독성에 좋지 않다.
+- 의존성 관리 : `context`에서 따로 상태관리할 경우, 데이터 상태를 더욱 명확하게 보여줄 수 있다.
+
+
+```jsx filename="app.jsx"
+	// App.js
+import React from "react";
+import { DataProvider } from "./context/dataContext";
+import { Home } from './component/Home' 
+
+const App = () => {
+  return (
+    <DataProvider>
+	<Home/>
+    </DataProvider>
+  );
+};
+
+export default App;
+```
+
+이제 `DataProvider` 내부에 있는 `Home` 컴포넌트에서는 해당 전역상태에 접근할 수 있게된다. <br/>
+한번 간단하게 `Home` 컴포넌트를 구성해보자.
+
+```jsx filename="component/Home.jsx"
+
+import { useData } from './context/dataContext'
+
+const Home = () => {
+
+	const {count, setCount} = useData()
+
+	const btnPlus = () => {
+		setCount((prev) => prev+1)
+	}
+	const btnMinus = () => {
+		setCount((prev) => prev-1)
+	}
+
+	return (
+		<>
+			<div>현재 카운트 : {count}</div>
+			<button onClick={btnPlus}>PLUS</button>
+			<button onClick={btnMinus}>Minus</button>
+		</>
+	)
+}
+
+```
+
+`Custom Hook`과 구조적으로 거의 같다. 사전에 선언한 `useData`를 호출하여 값의 수정을 진행하는 것이다. <br/>
+하지만 이렇게 할경우 상태를 변경하는 컴포넌트 내부에서 상태변경을 직접 찾아야한다.<br/>
+
+한번 개선해보자.
+
+```jsx filename="context/dataContext.jsx"
+
+const {useState, createContext, useContext} from 'react';
+
+const dataContext = createContext();
+
+export const dataProvider = ({children}) => {
+	const [count, setCount] = useState(0);
+
+	const countUp = () => {
+		setCount((prev) => prev + 1)
+	}
+	const countDown = () => {
+		setCount((prev) => prev - 1)
+	}
+	
+	return (
+		<dataContext.Provider value={{count, countUp, countDown}}>
+			{children}
+		</dataContext.Provider>
+	)
+}
+
+export const useData = () => {
+	return useContext(dataContext)
+}
+
+```
+
+상태 변경을 진행하는 함수를 애초에 선언하고, 해당 함수를 컴포넌트에서 불러오는 것이다.
+
+```jsx filename="component/Home.jsx"
+
+import { useData } from './context/dataContext'
+
+const Home = () => {
+
+	const {count, countUp, countDown} = useData()
+
+	return (
+		<>
+			<div>현재 카운트 : {count}</div>
+			<button onClick={countUp}>PLUS</button>
+			<button onClick={countDown}>Minus</button>
+		</>
+	)
 }
 ```
 
-- `createContext`는 함수 외부에 선언한다. 함수가 재렌더링 될때마다 렌더링 될 이유가 없기 때문이다.
-- `createContext`를 Router처럼 HTML요소로서 전달하기 원하는 컴포넌트에 씌워서 값을 전달한다.
+export const Home = () => {
 
-이렇게 전달할 경우 해당 `props`는 자식요소 모두에게 전달된다. 자식요소들은 해당 `context`를 `import` 하여 변수에 초기화하여 직접적으로 사용할 수 있는것이다.
+	const [count, setCount] = useState(0);
+	
+	const countUp = () => {
+		setCount((prev) => prev+1)
+	}
+	const countDown = () => {
+		setCount((prev) => prev-1)
+	}
 
-```jsx
-import { useContext } from 'react';
+	return (
+		<>
+			<div>현재 카운트 : {count}</div>
+			<div className="flex gap-2">
+				<Button text="PLUS" onClick={countUp}></Button>
+				<Button type="red" text="MINUS" onClick={countDown}>Minus</Button>
+			</div>
+		</>
+	)
+}
 
-export default function Editor() {
-    const todos = useContext(TodoStateContext);
-    
-    return(
-	    (...)
-    )
-    }
-```
+<Preview>
+<Home/>
+</Preview>
 
-만약 전달하고자 하는 `함수 / state`가 여러개 일 경우, `.provider`에서 객체로 묶어 전달할 수 있다.
-
-이럴 경우에는 `객체 분해할당`을 적절히 활용하여 사용할 수 있겠다.
