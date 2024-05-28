@@ -6,7 +6,7 @@ title: 02. 기본적인 사용
 
 ![sample](/img/2024-05-28-15-43-17.png)
 
-import {Steps} from 'nextra/components'
+import {Steps, Callout} from 'nextra/components'
 import {Preview, Button} from '/utils/Module'
 import {useState} from 'react'
 import {useModal} from '/store'
@@ -70,6 +70,12 @@ export default counterReducer;
 - **reducers** <br/>
 코드로 접근하게 될 때, `action.type`를 명시해서 지금 내가 보내는 액션이 어떤 작업인지 <br/>
 알려줘야 할 것이다. 객체 자체의 이름 (`up, down`)이 코드로 접근하게 될때의 키(`key`) 값이 된다.
+
+<Callout type="warning">
+원시 자료형은 문제없으나, 참조 자료형의 경우 `toolkit`을 사용하지 않을 경우 <br/>
+상태의 **불변성** 을 지켜야 한다. 지금 같은 경우 `toolkit`을 사용하므로 해당 부분은 문제없다.
+</Callout>
+
 
 이제 간단한 카운트 작업을 진행할 수 있는 코드를 작성했으니, 이걸 `Store`에 등록해보겠다.
 
