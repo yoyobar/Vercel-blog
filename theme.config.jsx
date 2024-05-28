@@ -44,7 +44,7 @@ const Comments = ({ term }) => {
                 <div className='mt-4'>
                     <Giscus
                         id='comments'
-                        repo='yoyobar/vercelblog'
+                        repo='yoyobar/blog'
                         repoId='R_kgDOL8uRmA'
                         category='General'
                         categoryId='DIC_kwDOL8uRmM4Cfa6n'
