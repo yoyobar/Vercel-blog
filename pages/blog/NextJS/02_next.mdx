@@ -1,0 +1,204 @@
+---
+title: 02. Folder Routing
+---
+
+# Folder Routing
+import {Callout} from 'nextra/components'
+import {Preview} from '/utils/Module'
+import Link from 'next/link';
+
+<Callout type="info">
+해당 게시글은 `Next.js 14` 버전을 다루고 있습니다.
+</Callout>
+
+`React`에서 `React-Router-DOM` 라이브러리로 CSR내에서 라우팅을 구현 햇듯이 <br/> 
+`Next.js`에서도 자체적인 라우팅을 지원 한다. 우선 폴더 라우팅을 소개해보고자 한다.
+
+
+## 디렉토리 구조
+
+
+![sample](/img/2024-05-30-21-02-56.png)
+
+`Next.js`는 기본적으로 `app` 폴더내에 존재하는 파일로 컴포넌트를 구성하게 된다. <br/>
+일반적으로 `npx create-next-app`를 할 경우 위와 같은 `create`, `read`... 등의 폴더는 없다. <br/>
+내가 이미 작성한 내용이다.
+
+우선 각각의 구성요소를 알아보자.
+
+### `layout.js`
+레이아웃, 의미적으로는 골격을 나타낸다. <br/>
+가장 상위에 존재하는 `layout.js`는 레이아웃 파일이 존재하지 않는 모든파일에 적용되고, <br/>
+이는 다르게 말해서 공통적으로 렌더링되는 컴포넌트라고 말할 수 있다. 
+
+
+```jsx filename="layout.js"
+import './globals.css';
+
+export const metadata = {
+    title: '리액트 마지막 과제',
+    description: 'OZ코딩스쿨 FE_03 김민수 마지막 과제입니다.',
+};
+
+export default function RootLayout({ children }) {
+    return (
+        <html lang='ko'>
+            <body>
+                <div className='flex select-none items-center gap-4 bg-black
+                 text-white p-2'>
+                    <h1 className='text-3xl hover:text-indigo-300 font-bold'>
+                        <div>HOME</div>
+                    </h1>
+                    <div className='hover:text-indigo-300'>
+                        POSTS
+                    </div>
+                    <div className='hover:text-indigo-300'>
+                        CREATE POST
+                    </div>
+                </div>
+                <div className='select-none'>{children}</div>
+            </body>
+        </html>
+    );
+}
+```
+
+export function Layout() {
+    return (
+        <div className='flex select-none items-center gap-4 bg-black
+text-white p-2'>
+    <h1 className='text-3xl hover:text-indigo-300 font-bold'>
+        <div>HOME</div>
+    </h1>
+    <div className='hover:text-indigo-300'>
+        POSTS
+    </div>
+    <div className='hover:text-indigo-300'>
+        CREATE POST
+    </div>
+</div>
+    )
+}
+
+<Preview>
+<Layout/>
+</Preview>
+
+위와 같은 화면이 전체화면에서 렌더링 되는 것을 확인할 수 있다.
+<Callout type='info'>
+더 가까운 하위 라우팅에 `layout.js`가 존재할 경우 <br/> 부모 `layout.js`를 무시하고 해당 파일을 규격으로 잡는다.
+</Callout>
+
+
+### `page.js`
+페이지, 일반적으로 생각하는 `index.js`와 역할이 같다. <br/>
+해당 라우팅에서 가장 첫번째 페이지다.
+
+```jsx filename="page.js"
+const Highlight = ({ children }) => {
+    return <span className='p-1 text-indigo-800 bg-slate-200 rounded-md'>{children}</span>;
+};
+
+export default function Home() {
+    return (
+        <>
+            <div className='p-2 text-2xl font-bold'>React 마지막과제 18일차 과제 입니다.</div>
+            <div className='p-2 text-2xl font-bold'>
+                <Highlight>Next.js</Highlight>의 <Highlight>App-Router</Highlight> 내용을 다루고 있습니다.
+            </div>
+        </>
+    );
+}
+```
+
+
+
+export function Page () {
+    const Highlight = ({ children }) => {
+    return <span className=
+    'p-1 m-1 text-indigo-800 bg-slate-200 rounded-md'>{children}
+    </span>;
+};
+
+        return (
+        <>
+            <div className='p-2 text-2xl font-bold'>React 마지막과제 18일차 과제 입니다.</div>
+            <div className='p-2 text-2xl font-bold'>
+                <Highlight>Next.js</Highlight>의 
+                <Highlight>App-Router</Highlight>내용을 다루고 있습니다.
+            </div>
+        </>
+    );
+}
+
+
+<Preview>
+<Layout/>
+<Page/>
+</Preview>
+
+기본적인 사용법은 리액트의 컴포넌트와 동일하다. `layout.js`를 작성했으므로<br/>
+위와 같이 렌더링 된다.
+
+## Folder Routing
+`Next.js`는 별도로 라우팅하지 않아도 <br/> 
+폴더를 생성하면 해당 폴더를 기준으로 라우팅 경로가 나눠진다.
+
+![sample](/img/2024-05-30-21-25-27.png)
+<br/>
+
+그래서 위와 같은 경로는 `localhost:3000/create`로 설정되는 것이다. <br/>
+개발자가 조금더 직관적으로 라우팅을 설정할 수 있다!
+
+### `Link`
+
+`React-Router-DOM`에서 `useNavigate`와  `Link`를 활용해서 페이지를 전환 했을 것이다. <br/>
+`Next.js`에서도 이는 존재한다. `to=`가 아닌 `href=`를 사용하며 방식은 완전히 동일하다.<br/>
+예시를 한번 들어보겠다.
+
+```jsx filename="page.js"
+import Link from 'next/link';
+
+export default function Home() {
+    
+    return (
+        <Link>/create 이동 테스트<Link/>
+    )
+}
+```
+
+<Preview>
+<Link className="bg-black p-1 text-white hover:text-indigo-300 font-bold" href="/create">/create 이동 테스트</Link>
+</Preview>
+
+동일하게 작동하는 것을 확인할 수 있다. <br/>
+
+그렇다면, 게시글의 `번호` 등을 기준으로 반복되어 생성되는 특수한 라우팅은 어떻게 할까? <br/>
+
+### 동적 라우팅 생성
+
+![sample](/img/2024-05-30-21-51-41.png)
+
+동적 라우팅은 간단하다. 폴더를 생성할때 `[]`로 감싸서 생성하면<br/>
+해당 경로는 동적인 경로가 된다. <br/> 
+
+```jsx filename="/read/[id]/page.js"
+export default function ReadId () {
+    return (
+        <div>동적인 모든 경로에 할당됩니다.</div>
+    )
+}
+```
+
+<Preview>
+<div>동적인 모든 경로에 할당됩니다.</div>
+</Preview>
+
+다만, 이렇게 한다면 동적으로 링크를 생성할 수는 있지만, <br/>
+`id`에 맞는 동적인 데이터를 받아올 수는 없다. <br/>
+
+그 방법은 다음 챕터에서 다루겠다.
+
+
+
+

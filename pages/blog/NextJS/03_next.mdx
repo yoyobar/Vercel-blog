@@ -1,0 +1,111 @@
+---
+title: 03. App Router
+---
+
+import {Callout} from 'nextra/components'
+import {Preview} from '/utils/Module'
+
+# App Router
+
+<Callout type="info">
+해당 게시글은 `Next.js 14` 버전을 다루고 있습니다.
+</Callout>
+
+![sample](/img/2024-05-30-21-46-28.png)
+
+`App Router`란 사용자가 요청하는 페이지나 기능의 요청을 적절히 분배하고, 전달하는 역할을 한다. <br/>
+쉽게 말해서, 앱 라우터는 사용자가 이동하려는 페이지를 찾아주는 네비게이터라고 할 수 있다.
+
+`Next.js`는 구버전에는 `Page Router`를 사용했지만<br/>
+13버전 이후로 `App Router`를 사용중이고, 안정화 단계에 들어서서 <br/>
+필자는 `App Router`를 위주로 다루겠다.
+
+## 앱 라우팅의 구별
+
+`Next.js ^13` 버전 이후 컴포넌트들은 두가지로 분류된다. 둘의 차이를 알아보자.
+
+### `Server Component`
+
+기본적으로 서버 컴포넌트로 렌더링을 하게 된다. 해당 컴포넌트는 SSR로 화면에 렌더링되며 <br/>
+`async`, `await`를 활용한 데이터의 비동기적인 갱신이 가능하다. <br/>
+
+<Callout type="warning">
+단, `React`의 기본적인 훅 `useState`, `useEffect`등은 사용할 수 없다
+</Callout>
+
+### `Client Component`
+
+리액트의 기본적인 컴포넌트와 동일한 구성을 취한다. <br/>
+리액트를 다루듯이 다룰 수 있다. <br/>
+
+컴포넌트 최상단에 `'use client'`를 명시하면 클라이언트 컴포넌트로 처리된다.
+
+
+<Callout type="info">
+이 둘의 차이로 사용자가 동작할 버튼이나 인풋은 `Client Component`로 관리하고 <br/>
+그렇지 않다면 `Server Component`로 다뤄야 한다는 점을 상기할 수 있다!
+</Callout>
+
+그렇다면 위의 내용을 참고해서<br/> 
+게시글을 유동적으로 가져 올 수 있는 컴포넌트를 제작해보자.
+
+### 동적 라우팅과 동적 데이터 가져오기
+
+```json filename="db.json"
+{
+  "topics": [
+    {
+      "title": "Next.js 란?",
+      "body": "리액트 기능을 기반으로한 풀스택 웹 애플리케이션 프레임워크 입니다.",
+      "id": 1
+    },
+    {
+      "title": "클라이언트 사이드 렌더링 (CSR)",
+      "body": "1. 서버가 브라우저를 응답을 보냄\n2. 브라우저가 JavaScript를 다운받음\n3. 브라우저가 React를 실행\n4. 사용자가 사용 가능",
+      "id": 2
+    },
+    {
+      "title": "서버 사이드 렌더링 (SSR)",
+      "body": "1. 서버가 렌더링된 HTML의 응답을 브라우저에 전송\n2. 자바스크립트 다운로드 진행\n3. 브라우저가 React를 진행\n4. 사용자가 사용가능",
+      "id": 3
+    }
+  ]
+}
+```
+
+우선 예시로 서버측에 작은 데이터의 집합이 존재한다고 가정하겠다. <br/>
+위와 같은 데이터를 작성해보겠다.
+
+
+```jsx filename="read/[id]/page.js"
+import axios from 'axios';
+import DeleteBtn from '/components/DeleteBtn';
+import { urls } from '/api/urls';
+
+export default async function Read({ params }) {
+    const res = await axios.get(`${urls.topics}/${params.id}`);
+    const topic = res.data;
+    return (
+        <>
+            <div className='w-full flex flex-col'>
+                <div className='bg-slate-100 text-2xl font-bold p-2'>제목 : {topic.title}</div>
+                <div className='bg-slate-100 p-2'>내용 : </div>
+                <div className='bg-slate-100 p-2'>{topic.body}</div>
+            </div>
+            <DeleteBtn />
+        </>
+    );
+}
+```
+<Preview>
+![sample](/img/2024-05-30-22-17-34.gif)
+</Preview>
+
+`GET`요청으로 http://localhost:3001/topics/1 <br/>
+이런 예시로 데이터를 가져오고 서버 컴포넌트를 렌더링하는 것이다. 
+이런 방식으로 간단하게 서버 컴포넌트에서 데이터를 가져오는 방식이다. <br/>
+
+사실 추가적인 기능이 더 있지만, <br/>
+`App-Router`를 잘 다루면 `Next.js`의 절반은 끝난거와 다름없다.<br/>
+
+추가적인 기능은 블로그를 완전히 개편해보면서 시행착오를 겪어보며 작성하겠다.
